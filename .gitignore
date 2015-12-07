@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+
+#seq24 itself:
+src/seq24
+
+#gedit backup files
+*~

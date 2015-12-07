@@ -1,0 +1,38 @@
+
+
+FIRST BUILD, 20150615
+
+$ ./configure 
+failed.
+
+tried:
+$ autoreconf 
+
+which suggested I rename 'configure.in' to 'configure.ac', which I did.
+
+Then:
+$ autoreconf 
+
+said required file './compile' was missing, suggesting I try:
+$ automake --add-missing
+..which seemed reasonbly useful. It recommended I try
+
+running
+$ ./configure 
+again said that 
+    No package 'gtkmm-2.4' found
+
+to fix: 
+$ sudo apt-get install libgtkmm-2.4-dev
+
+
+then did a 'make', but the bloody thing gave an error
+
+
+did a big replace of all instances of 'SigC' with 'sigc' in the source files and it worked, but then found that I'd been working with verwion 0.8.7, when there's
+a version of 0.9.2 available from: 
+
+https://launchpad.net/seq24
+
+this compiles first time!!
+
