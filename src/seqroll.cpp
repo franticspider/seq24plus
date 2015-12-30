@@ -20,6 +20,9 @@
 #include "event.h"
 #include "seqroll.h"
 
+/** Class for managing the sequence roll */
+
+
 const long c_handlesize = 16;
 
 inline static long

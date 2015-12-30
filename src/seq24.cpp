@@ -233,7 +233,7 @@ int main(int argc, char *argv[])
 
     } /* end while */
 
-//sjh
+    //todo: put the getopt part in a separate function for clarity
     printf("Finished parsing with getopt\n");
 
 
@@ -290,6 +290,7 @@ int main(int argc, char *argv[])
     else
         printf( "Error calling getenv( \"%s\" )\n", HOME );
 
+    /* Set up the 'perform' object */
     p.init();
     p.launch_input_thread();
     p.launch_output_thread();

@@ -183,7 +183,7 @@ class perform
 #endif
 #endif
 
-    bool m_jack_running;
+    bool m_jack_running;	//Flag to indicate whether a jack session is active or not
     bool m_jack_master;
 
     void inner_start( bool a_state );
@@ -248,6 +248,9 @@ class perform
 
     void set_right_tick( long a_tick );
     long get_right_tick( void );
+
+    /* Update the max_tick in the performance */
+    void update_max_tick();
 
     void move_triggers( bool a_direction );
     void copy_triggers(  );

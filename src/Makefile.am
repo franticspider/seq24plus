@@ -25,6 +25,7 @@ seq24_SOURCES = \
 	options.cpp options.h \
 	optionsfile.cpp optionsfile.h \
 	perfedit.cpp perfedit.h \
+	playlistplayer.cpp playlistplayer.h \
 	perfnames.cpp perfnames.h \
 	perform.cpp perform.h \
 	perfroll.cpp perfroll.h \

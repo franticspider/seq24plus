@@ -28,6 +28,8 @@
 #include "options.h"
 
 
+#include "playlistplayer.h"
+
 
 #ifndef SEQ24_MAINWINDOW
 #define SEQ24_MAINWINDOW
@@ -72,6 +74,9 @@ class mainwnd : public Gtk::Window, public performcallback
     perfedit *m_perf_edit;
     options *m_options;
 
+    //playlist_wnd *m_playlist_wnd;	//playlist player
+    playlist_player *m_playplay;
+
     Gdk::Cursor   m_main_cursor;
 
     Button      *m_button_learn;
@@ -106,12 +111,16 @@ class mainwnd : public Gtk::Window, public performcallback
     void stop_playing();
     void learn_toggle();
     void open_performance_edit( );
+
+    void open_playlist_player( void ); //open the playlist editor
+
     void sequence_key( int a_seq );
     void update_window_title();
     void toLower(basic_string<char>&);
     bool is_modified();
     void file_new();
     void file_open();
+    void file_open_playlist();//sjh mod
     void file_save();
     void file_save_as();
     void file_exit();

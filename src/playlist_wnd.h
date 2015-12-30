@@ -19,25 +19,26 @@
 //-----------------------------------------------------------------------------
 
 
-#ifndef SEQ24_PERFEDIT
-#define SEQ24_PERFEDIT
+#ifndef SEQ24_PLAYLIST_WND
+#define SEQ24_PLAYLIST_WND
 
+//todo: these includes should be in the cpp file
 #include "sequence.h"
 #include "perform.h"
 
-#include <gtkmm/accelgroup.h>
 #include <gtkmm/adjustment.h>
-#include <gtkmm/box.h>
 #include <gtkmm/button.h>
-#include <gtkmm/drawingarea.h>
-#include <gtkmm/eventbox.h>
+#include <gtkmm/window.h>
+#include <gtkmm/accelgroup.h>
+#include <gtkmm/box.h>
 #include <gtkmm/main.h>
 #include <gtkmm/menu.h>
 #include <gtkmm/menubar.h>
-#include <gtkmm/table.h>
-#include <gtkmm/widget.h>
+#include <gtkmm/eventbox.h>
 #include <gtkmm/window.h>
-//#include <gtkmm/window.h> repeats an entry above
+#include <gtkmm/table.h>
+#include <gtkmm/drawingarea.h>
+#include <gtkmm/widget.h>
 #include <gtkmm/scrollbar.h>
 #include <gtkmm/viewport.h>
 #include <gtkmm/combo.h>
@@ -66,7 +67,7 @@
 using namespace Gtk;
 
 /* has a seqroll and paino roll */
-class perfedit:public Gtk::Window
+class playlist_wnd:public Gtk::Window
 {
 
   private:
@@ -159,8 +160,8 @@ class perfedit:public Gtk::Window
 
     void init_before_show ();
 
-    perfedit (perform * a_perf);
-    ~perfedit ();
+    playlist_wnd (perform * a_perf);
+    ~playlist_wnd ();
 };
 
 

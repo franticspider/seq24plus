@@ -183,11 +183,12 @@ perfroll::update_sizes()
     }
 
     if ( is_realized() ){
-	m_pixmap = Gdk::Pixmap::create( m_window,
+    	m_pixmap = Gdk::Pixmap::create( m_window,
                                         m_window_x,
                                         m_window_y, -1 );
     }
 
+    //this is a library call
     queue_draw();
 }
 
@@ -354,7 +355,8 @@ void perfroll::draw_sequence_on( Glib::RefPtr<Gdk::Drawable> a_draw, int a_seque
 	
                 if ( tick_off > 0 ){
                 	//SJHDEBUG:
-                	printf("Sequence %d, tickoff = %d\n",a_sequence+m_sequence_offset,tick_off);
+                	//TODO: Move this calculation to file->open and also whenever a perfroll is changed.
+                	//printf("Sequence %d, tickoff = %d\n",a_sequence+m_sequence_offset,tick_off);
                 	fflush(stdout);
 
                 	long x_on  = tick_on  / c_perf_scale_x;
@@ -464,7 +466,7 @@ void perfroll::draw_sequence_on( Glib::RefPtr<Gdk::Drawable> a_draw, int a_seque
                                 tick_f_x = x + w;
                             }
 
-                            /*
+                            /*todo: figure out what all this means:
                                     [           ]
                              -----------
                                              ---------
@@ -518,14 +520,13 @@ void perfroll::draw_background_on( Glib::RefPtr<Gdk::Drawable> a_draw, int a_seq
     {
         int x_pos = ((i * m_measure_length) - tick_offset) / c_perf_scale_x;
 
-
-           a_draw->draw_drawable(m_gc, m_background,
-                                 0,
-                                 0,
-                                 x_pos,
-                                 y,
-                                 c_perfroll_background_x,
-                                 c_names_y );
+		a_draw->draw_drawable(m_gc, m_background,
+							 0,
+							 0,
+							 x_pos,
+							 y,
+							 c_perfroll_background_x,
+							 c_names_y );
 
     }
 
@@ -705,11 +706,13 @@ perfroll::on_key_press_event(GdkEventKey* a_p0)
     if ( m_mainperf->is_active( m_drop_sequence)){
 
         if ( a_p0->type == GDK_KEY_PRESS ){
-
+        	//Delete or Backspace will remove the trigger from the performance
             if ( a_p0->keyval ==  GDK_Delete || a_p0->keyval == GDK_BackSpace ){
 
                 m_mainperf->push_trigger_undo();
                 m_mainperf->get_sequence( m_drop_sequence )->del_selected_trigger();
+                //todo: check efficiency here
+                m_mainperf->update_max_tick();
 
                 ret = true;
             }

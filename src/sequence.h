@@ -87,16 +87,16 @@ class sequence
     stack < list < trigger > >m_list_trigger_redo;
 
     /* markers */
-    list < event >::iterator m_iterator_play;
+    //sjh: removed m_iterator_play and m_iterator_play_trigger
+    //list < event >::iterator m_iterator_play;
     list < event >::iterator m_iterator_draw;
 
-    list < trigger >::iterator m_iterator_play_trigger;
+    //list < trigger >::iterator m_iterator_play_trigger;
     list < trigger >::iterator m_iterator_draw_trigger;
 
     /* contains the proper midi channel */
     char m_midi_channel;
     char m_bus;
-
 
     /* song playback mode mute */
     bool m_song_mute;

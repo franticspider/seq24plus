@@ -295,7 +295,7 @@ sequence::play( long a_tick, bool a_playback_mode )
     long start_tick = m_last_tick;
     long end_tick = a_tick;
     long trigger_offset = 0;
-
+//
     if (  m_song_mute )
     {
         set_playing(false);
@@ -327,7 +327,7 @@ sequence::play( long a_tick, bool a_playback_mode )
                 }
 
                 if ( (*i).m_tick_start >  end_tick ||
-                        (*i).m_tick_end   >  end_tick )
+                     (*i).m_tick_end   >  end_tick )
                 {
                     break;
                 }
@@ -1955,6 +1955,13 @@ bool sequence::intersectTriggers( long position, long& start, long& end )
     lock();
 
     list<trigger>::iterator i = m_list_trigger.begin();
+
+
+    //todo: can't help but want to make this faster - for loop?
+    //list<trigger>::iterator iend = m_list_trigger.end();
+    //for(i=m_list_trigger.begin();i != iend;i++)
+    //}
+
     while ( i != m_list_trigger.end() )
     {
         if ((*i).m_tick_start <= position && position <= (*i).m_tick_end)

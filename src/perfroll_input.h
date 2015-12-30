@@ -46,6 +46,7 @@ class FruityPerfInput : public AbstractPerfInput
         bool on_motion_notify_event(GdkEventMotion* a_ev, perfroll& ths);
 
     private:
+        void update(perfroll& ths);
         void updateMousePtr(perfroll& ths);
         void on_left_button_pressed(GdkEventButton* a_ev, perfroll& ths);
         void on_right_button_pressed(GdkEventButton* a_ev, perfroll& ths);

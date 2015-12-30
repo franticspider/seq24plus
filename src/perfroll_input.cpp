@@ -2,6 +2,19 @@
 #include "perfroll_input.h"
 #include "perfroll.h"
 
+/* Trying to update the max_tick in m_perform whenever necessary
+ * To achieve this, we'll update whenever we update MousePtr,
+ */
+void FruityPerfInput::update(perfroll& ths){
+
+	/* TODO: There is a risk that this'll be too slow
+	 * if we find this to be the case, we'll have to update a bit more sensitively
+	 */
+	ths.m_mainperf->update_max_tick();
+
+	updateMousePtr(ths);
+}
+
 void FruityPerfInput::updateMousePtr( perfroll& ths )
 {
     // context sensitive mouse
@@ -10,31 +23,36 @@ void FruityPerfInput::updateMousePtr( perfroll& ths )
     ths.convert_xy( m_current_x, m_current_y, &drop_tick, &drop_sequence );
     if (ths.m_mainperf->is_active( drop_sequence ))
     {
-        long start, end;
+        long start, end;//todo: how are these set??
         if (ths.m_mainperf->get_sequence(drop_sequence)->intersectTriggers( drop_tick, start, end ))
         {
             if (start <= drop_tick && drop_tick <= start + (c_perfroll_size_box_click_w * c_perf_scale_x) &&
                     (m_current_y % c_names_y) <= c_perfroll_size_box_click_w + 1)
             {
+            	// In the grab square at the START of the trigger
                 ths.get_window()->set_cursor( Gdk::Cursor( Gdk::RIGHT_PTR ));
             }
             else if (end - (c_perfroll_size_box_click_w * c_perf_scale_x) <= drop_tick && drop_tick <= end &&
                     (m_current_y % c_names_y) >= c_names_y - c_perfroll_size_box_click_w - 1)
             {
+            	// In the grab square at the END of the trigger
                 ths.get_window()->set_cursor( Gdk::Cursor( Gdk::LEFT_PTR ));
             }
             else
             {
+            	// Inside the trigger
                 ths.get_window()->set_cursor( Gdk::Cursor( Gdk::CENTER_PTR ));
             }
         }
         else
         {
+        	//outside of any triggers on an active sequence
             ths.get_window()->set_cursor( Gdk::Cursor( Gdk::PENCIL ));
         }
     }
     else
     {
+    	//not on an active sequence
         ths.get_window()->set_cursor( Gdk::Cursor( Gdk::CROSSHAIR ));
     }
 }
@@ -85,7 +103,7 @@ bool FruityPerfInput::on_button_press_event(GdkEventButton* a_ev, perfroll& ths)
         }
     }
 
-    updateMousePtr( ths );
+    update/*MousePtr*/( ths );
     return true;
 }
 
@@ -93,6 +111,7 @@ void FruityPerfInput::on_left_button_pressed(GdkEventButton* a_ev, perfroll& ths
 {
     if ( a_ev->state & GDK_CONTROL_MASK )
     {
+    	//if this sequence is active
         if ( ths.m_mainperf->is_active( ths.m_drop_sequence ))
         {
             bool state = ths.m_mainperf->get_sequence( ths.m_drop_sequence )->get_trigger_state( ths.m_drop_tick );
@@ -210,10 +229,11 @@ bool FruityPerfInput::on_button_release_event(GdkEventButton* a_ev, perfroll& th
     m_current_x = (int) a_ev->x;
     m_current_y = (int) a_ev->y;
 
-    if ( a_ev->button == 1 || a_ev->button == 3 )
-    {
-        m_adding_pressed = false;
-    }
+	//this seems pointless since its set to false below..
+    //if ( a_ev->button == 1 || a_ev->button == 3 )
+    //{
+    //    m_adding_pressed = false;
+    //}
 
     ths.m_moving = false;
     ths.m_growing = false;
@@ -226,7 +246,8 @@ bool FruityPerfInput::on_button_release_event(GdkEventButton* a_ev, perfroll& th
         ths.draw_drawable_row( ths.m_window, ths.m_pixmap, ths.m_drop_y );
     }
 
-    updateMousePtr( ths );
+    //todo: update the max tick in mainperf - check here is the right place
+    update/*MousePtr*/( ths );
     return true;
 }
 
@@ -287,7 +308,7 @@ bool FruityPerfInput::on_motion_notify_event(GdkEventMotion* a_ev, perfroll& ths
         }
     }
 
-    updateMousePtr( ths );
+    update/*MousePtr*/( ths );
     return true;
 }
 

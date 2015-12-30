@@ -24,10 +24,17 @@
 #include <cstring>
 #include <gtk/gtkversion.h>
 
+/*TODO: If you include this, you get a problem with
+    m_main_time = manage( new maintime( ));
+#include "playlist_wnd.h"
+*/
+
 #include "mainwnd.h"
 #include "perform.h"
 #include "midifile.h"
 #include "perfedit.h"
+#include "playlistplayer.h"
+
 
 #include "pixmaps/play2.xpm"
 #include "pixmaps/stop.xpm"
@@ -88,6 +95,10 @@ mainwnd::mainwnd(perform *a_p):
                 mem_fun(*this, &mainwnd::file_save)));
     m_menu_file->items().push_back(MenuElem("Save _as...",
                 mem_fun(*this, &mainwnd::file_save_as)));
+/** SJH: Adding the load playlist option here */
+    //TODO: Create an open_playlist function in mainwnd
+    m_menu_file->items().push_back(MenuElem("Open _playlist...",
+                mem_fun(*this, &mainwnd::file_open_playlist)));
     m_menu_file->items().push_back(SeparatorElem());
     m_menu_file->items().push_back(MenuElem("_Import...",
                 mem_fun(*this, &mainwnd::file_import_dialog)));
@@ -252,6 +263,8 @@ mainwnd::mainwnd(perform *a_p):
 
 
     m_perf_edit = new perfedit( m_mainperf );
+    //m_playlist_wnd = new playlist_wnd( m_mainperf);
+    m_playplay = new playlist_player();
 
     m_sigpipe[0] = -1;
     m_sigpipe[1] = -1;
@@ -306,8 +319,29 @@ mainwnd::open_performance_edit( void )
     else {
         m_perf_edit->init_before_show();
         m_perf_edit->show_all();
+
+        //todo: handle mods better
         m_modified = true;
     }
+}
+
+
+/*sjh: Open the playlist window
+ * assume this happens when a playlist is opened (so no need for a separate button)
+ * */
+void
+mainwnd::open_playlist_player( void )
+{
+    //if (m_playlist->is_visible())
+    //    m_playlist->hide();
+    //else {
+        //m_playlist_wnd->init_before_show();
+        //m_playlist_wnd->show_all();
+
+    m_playplay->init_before_show();
+    m_playplay->show_all();
+
+    //}
 }
 
 
@@ -483,6 +517,10 @@ void mainwnd::open_file(const Glib::ustring& fn)
     m_entry_notes->set_text(*m_mainperf->get_screen_set_notepad(
                 m_mainperf->get_screenset()));
     m_adjust_bpm->set_value( m_mainperf->get_bpm());
+
+    //Check what the max tick is
+    m_mainperf->update_max_tick();
+
 }
 
 
@@ -492,6 +530,18 @@ void mainwnd::file_open()
     if (is_save())
         choose_file();
 }
+
+
+/*callback function*/
+void mainwnd::file_open_playlist()
+{
+    if (is_save()){
+        choose_file();
+        open_playlist_player();
+    }
+}
+
+
 
 
 void mainwnd::choose_file()

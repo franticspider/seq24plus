@@ -485,6 +485,50 @@ long perform::get_right_tick( void )
 }
 
 
+/* update the current maximum tick */
+void perform::update_max_tick(){
+
+    long tick_on=0;
+    long tick_off=0;
+    long offset=0;
+    bool selected=0;
+    int last_seq=0;
+
+	m_max_tick=0;
+	for(int ss=0;ss<c_max_sequence;ss++){
+
+		if(is_active(ss)){
+
+            sequence *seq =  get_sequence( ss );
+            //TODO: Check that this'll work when the perfroll window isn't / hasn't been open
+            //TODO: It doesn't work when perfroll window isn't open - something up with draw tick??? need to find a similar way of doing it...
+            seq->reset_draw_marker();
+            seq->reset_draw_trigger_marker();
+            while ( seq->get_next_trigger( &tick_on, &tick_off, &selected, &offset  )){
+
+				if ( tick_off > 0 ){
+					//SJHDEBUG:
+					//TODO: Move this calculation to file->open and also whenever a perfroll is changed.
+
+					if(tick_off>m_max_tick){
+						m_max_tick=tick_off;
+						last_seq=ss;
+					}
+
+					//faster, but we can't print ss
+					//m_max_tick = m_max_tick<tick_off?tick_off:m_max_tick;
+
+				}
+            }
+		}
+	}
+	//TODO - if getopt -v would be useful for debugging
+	printf("Sequence %d, tickoff = %d, max_tick = %d\n",last_seq,tick_off,m_max_tick);
+	fflush(stdout);
+}
+
+
+
 void perform::add_sequence( sequence *a_seq, int a_perf )
 {
     /* check for perferred */
@@ -808,6 +852,15 @@ void perform::play( long a_tick )
         }
     }
 
+    if(m_tick > m_max_tick){
+    	//todo: This can be called more than once - probably because it can take some time for the thread to stop
+    	//is this a problem? dunno...
+    	printf("We are at end of the sequences, stopping\n");
+    	stop_jack();
+    	stop();
+    }
+
+
     /* flush the bus */
     m_master_bus.flush();
 }
@@ -1015,7 +1068,7 @@ void perform::inner_start(bool a_state)
     m_condition_var.unlock();
 }
 
-
+/** Stop the performance */
 void perform::inner_stop()
 {
     set_running(false);
@@ -1246,7 +1299,10 @@ void jack_session_callback(jack_session_event_t *event, void *arg )
 #endif //ifdef JACK_SESSION
 #endif //ifdef JACK_SUPPORT
 
-
+/*
+ * sjh: This is the main performance loop in song mode
+ * TODO: It's quite a lot of code - could be break it down into a set of functions?
+ */
 void perform::output_func(void)
 {
     while (m_outputing) {
@@ -1327,20 +1383,27 @@ void perform::output_func(void)
             stats_clock[i] = 0;
         }
 
-        /* if we are in the performance view, we care
-           about starting from the offset */
-        /* TODO: This off set is the "L" square on the top line - but it should only work when the "L->R" toggle is set! */
+        /* if we are in the performance view, we care about starting from the offset */
+        /*
+         * TODO: This off set is the "L" square on the top line - but it should only work when the "L->R" toggle is set!
+         *
+         * TODO: find out whether m_playback_mode is the flag that says whether we are playing a song or not...
+         *
+         * TODO: What is the difference between current_tick and clock_tick I wonder...
+         * */
+        //This sets the start tick to the "L"
         if ( m_playback_mode && !m_jack_running){
 
             current_tick = m_starting_tick;
             clock_tick = m_starting_tick;
+
             set_orig_ticks( m_starting_tick );
         }
 
 
         int ppqn = m_master_bus.get_ppqn();
 #ifndef __WIN32__
-        /* get start time position */
+        /* get start time position - store it in 'last'*/
         clock_gettime(CLOCK_REALTIME, &last);
 
         if ( global_stats )

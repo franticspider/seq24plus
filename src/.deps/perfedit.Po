@@ -884,12 +884,13 @@ perfedit.o: perfedit.cpp /usr/include/stdc-predef.h perfedit.h sequence.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdint.h /usr/include/stdint.h \
  /usr/include/jack/types.h /usr/include/jack/transport.h \
  /usr/include/jack/weakmacros.h /usr/include/jack/session.h \
- /usr/include/gtkmm-2.4/gtkmm/adjustment.h \
- /usr/include/gtkmm-2.4/gtkmm/button.h /usr/include/gtkmm-2.4/gtkmm/bin.h \
- /usr/include/gtkmm-2.4/gtkmm/container.h \
- /usr/include/gtkmm-2.4/gtkmm/window.h \
  /usr/include/gtkmm-2.4/gtkmm/accelgroup.h \
- /usr/include/gtkmm-2.4/gtkmm/box.h /usr/include/gtkmm-2.4/gtkmm/menu.h \
+ /usr/include/gtkmm-2.4/gtkmm/adjustment.h \
+ /usr/include/gtkmm-2.4/gtkmm/box.h \
+ /usr/include/gtkmm-2.4/gtkmm/container.h \
+ /usr/include/gtkmm-2.4/gtkmm/button.h /usr/include/gtkmm-2.4/gtkmm/bin.h \
+ /usr/include/gtkmm-2.4/gtkmm/eventbox.h \
+ /usr/include/gtkmm-2.4/gtkmm/menu.h \
  /usr/include/gtkmm-2.4/gtkmm/menushell.h \
  /usr/include/gtkmm-2.4/gtkmm/menu_elems.h \
  /usr/include/gtkmm-2.4/gtkmm/menuitem.h \
@@ -906,8 +907,8 @@ perfedit.o: perfedit.cpp /usr/include/stdc-predef.h perfedit.h sequence.h \
  /usr/include/gtkmm-2.4/gtkmm/tearoffmenuitem.h \
  /usr/include/gtkmm-2.4/gtkmm/separatormenuitem.h \
  /usr/include/gtkmm-2.4/gtkmm/menubar.h \
- /usr/include/gtkmm-2.4/gtkmm/eventbox.h \
  /usr/include/gtkmm-2.4/gtkmm/table.h \
+ /usr/include/gtkmm-2.4/gtkmm/window.h \
  /usr/include/gtkmm-2.4/gtkmm/scrollbar.h \
  /usr/include/gtkmm-2.4/gtkmm/range.h \
  /usr/include/gtkmm-2.4/gtkmm/border.h \
@@ -939,7 +940,8 @@ perfedit.o: perfedit.cpp /usr/include/stdc-predef.h perfedit.h sequence.h \
  perfroll.h /usr/include/gdkmm-2.4/gdkmm/cursor.h perfroll_input.h \
  perftime.h seqtime.h pixmaps/snap.xpm pixmaps/play2.xpm pixmaps/stop.xpm \
  pixmaps/expand.xpm pixmaps/collapse.xpm pixmaps/loop.xpm \
- pixmaps/copy.xpm pixmaps/undo.xpm pixmaps/down.xpm pixmaps/perfedit.xpm
+ pixmaps/copy.xpm pixmaps/undo.xpm pixmaps/down.xpm pixmaps/perfedit.xpm \
+ pixmaps/endstop.xpm
 
 /usr/include/stdc-predef.h:
 
@@ -2971,19 +2973,19 @@ midifile.h:
 
 /usr/include/jack/session.h:
 
+/usr/include/gtkmm-2.4/gtkmm/accelgroup.h:
+
 /usr/include/gtkmm-2.4/gtkmm/adjustment.h:
+
+/usr/include/gtkmm-2.4/gtkmm/box.h:
+
+/usr/include/gtkmm-2.4/gtkmm/container.h:
 
 /usr/include/gtkmm-2.4/gtkmm/button.h:
 
 /usr/include/gtkmm-2.4/gtkmm/bin.h:
 
-/usr/include/gtkmm-2.4/gtkmm/container.h:
-
-/usr/include/gtkmm-2.4/gtkmm/window.h:
-
-/usr/include/gtkmm-2.4/gtkmm/accelgroup.h:
-
-/usr/include/gtkmm-2.4/gtkmm/box.h:
+/usr/include/gtkmm-2.4/gtkmm/eventbox.h:
 
 /usr/include/gtkmm-2.4/gtkmm/menu.h:
 
@@ -3021,9 +3023,9 @@ midifile.h:
 
 /usr/include/gtkmm-2.4/gtkmm/menubar.h:
 
-/usr/include/gtkmm-2.4/gtkmm/eventbox.h:
-
 /usr/include/gtkmm-2.4/gtkmm/table.h:
+
+/usr/include/gtkmm-2.4/gtkmm/window.h:
 
 /usr/include/gtkmm-2.4/gtkmm/scrollbar.h:
 
@@ -3116,3 +3118,5 @@ pixmaps/undo.xpm:
 pixmaps/down.xpm:
 
 pixmaps/perfedit.xpm:
+
+pixmaps/endstop.xpm:

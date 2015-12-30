@@ -53,6 +53,7 @@ am_seq24_OBJECTS = configfile.$(OBJEXT) event.$(OBJEXT) font.$(OBJEXT) \
 	mainwid.$(OBJEXT) mainwnd.$(OBJEXT) midibus.$(OBJEXT) \
 	midibus_portmidi.$(OBJEXT) midifile.$(OBJEXT) mutex.$(OBJEXT) \
 	options.$(OBJEXT) optionsfile.$(OBJEXT) perfedit.$(OBJEXT) \
+	playlistplayer.$(OBJEXT) \
 	perfnames.$(OBJEXT) perform.$(OBJEXT) perfroll.$(OBJEXT) \
 	perfroll_input.$(OBJEXT) perftime.$(OBJEXT) seq24.$(OBJEXT) \
 	seqdata.$(OBJEXT) seqedit.$(OBJEXT) seqevent.$(OBJEXT) \
@@ -241,6 +242,7 @@ seq24_SOURCES = \
 	options.cpp options.h \
 	optionsfile.cpp optionsfile.h \
 	perfedit.cpp perfedit.h \
+	playlistplayer.cpp playlistplayer.h \
 	perfnames.cpp perfnames.h \
 	perform.cpp perform.h \
 	perfroll.cpp perfroll.h \
@@ -373,6 +375,7 @@ include ./$(DEPDIR)/mutex.Po
 include ./$(DEPDIR)/options.Po
 include ./$(DEPDIR)/optionsfile.Po
 include ./$(DEPDIR)/perfedit.Po
+include ./$(DEPDIR)/playlistplayer.Po
 include ./$(DEPDIR)/perfnames.Po
 include ./$(DEPDIR)/perform.Po
 include ./$(DEPDIR)/perfroll.Po

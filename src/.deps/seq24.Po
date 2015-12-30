@@ -953,8 +953,9 @@ seq24.o: seq24.cpp /usr/include/stdc-predef.h /usr/include/getopt.h \
  /usr/include/gtkmm-2.4/gtkmm/tooltip.h \
  /usr/include/gtkmm-2.4/gtkmm/spinbutton.h \
  /usr/include/gtkmm-2.4/gtkmm/progressbar.h \
- /usr/include/gtkmm-2.4/gtkmm/notebook.h /usr/include/gtkmm-2.4/gtkmm.h \
- /usr/include/giomm-2.4/giomm.h /usr/include/giomm-2.4/giomm/action.h \
+ /usr/include/gtkmm-2.4/gtkmm/notebook.h playlistplayer.h \
+ /usr/include/gtkmm-2.4/gtkmm.h /usr/include/giomm-2.4/giomm.h \
+ /usr/include/giomm-2.4/giomm/action.h \
  /usr/include/giomm-2.4/giomm/actiongroup.h \
  /usr/include/giomm-2.4/giomm/actionmap.h \
  /usr/include/giomm-2.4/giomm/simpleaction.h \
@@ -3375,6 +3376,8 @@ options.h:
 /usr/include/gtkmm-2.4/gtkmm/progressbar.h:
 
 /usr/include/gtkmm-2.4/gtkmm/notebook.h:
+
+playlistplayer.h:
 
 /usr/include/gtkmm-2.4/gtkmm.h:
 
