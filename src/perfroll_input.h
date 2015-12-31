@@ -46,7 +46,7 @@ class FruityPerfInput : public AbstractPerfInput
         bool on_motion_notify_event(GdkEventMotion* a_ev, perfroll& ths);
 
     private:
-        void update(perfroll& ths);
+        void update(perfroll& ths, bool update_max);
         void updateMousePtr(perfroll& ths);
         void on_left_button_pressed(GdkEventButton* a_ev, perfroll& ths);
         void on_right_button_pressed(GdkEventButton* a_ev, perfroll& ths);
@@ -54,6 +54,7 @@ class FruityPerfInput : public AbstractPerfInput
         long m_current_x, m_current_y;
 };
 
+//TODO: update_max_tick needs to be called if using this class
 class Seq24PerfInput : public AbstractPerfInput
 {
     public:

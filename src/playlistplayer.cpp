@@ -9,7 +9,10 @@
 #include "playlistplayer.h"
 
 playlist_player::playlist_player() {
-	// TODO Auto-generated constructor stub
+
+
+    set_title( "seq24 - Playlizt Editor");
+    set_size_request(700, 400);
 
 }
 

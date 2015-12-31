@@ -494,6 +494,7 @@ void perform::update_max_tick(){
     bool selected=0;
     int last_seq=0;
 
+    //todo: check efficiency here
 	m_max_tick=0;
 	for(int ss=0;ss<c_max_sequence;ss++){
 
@@ -507,8 +508,6 @@ void perform::update_max_tick(){
             while ( seq->get_next_trigger( &tick_on, &tick_off, &selected, &offset  )){
 
 				if ( tick_off > 0 ){
-					//SJHDEBUG:
-					//TODO: Move this calculation to file->open and also whenever a perfroll is changed.
 
 					if(tick_off>m_max_tick){
 						m_max_tick=tick_off;

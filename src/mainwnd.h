@@ -27,7 +27,7 @@
 #include "perfedit.h"
 #include "options.h"
 
-
+#include "playlist_wnd.h"
 #include "playlistplayer.h"
 
 
@@ -74,7 +74,7 @@ class mainwnd : public Gtk::Window, public performcallback
     perfedit *m_perf_edit;
     options *m_options;
 
-    //playlist_wnd *m_playlist_wnd;	//playlist player
+    playlist_wnd *m_playlist_wnd;	//playlist player
     playlist_player *m_playplay;
 
     Gdk::Cursor   m_main_cursor;

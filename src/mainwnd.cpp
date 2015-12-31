@@ -24,16 +24,17 @@
 #include <cstring>
 #include <gtk/gtkversion.h>
 
-/*TODO: If you include this, you get a problem with
-    m_main_time = manage( new maintime( ));
-#include "playlist_wnd.h"
-*/
+//#include "playlist_wnd.h"
 
 #include "mainwnd.h"
 #include "perform.h"
 #include "midifile.h"
 #include "perfedit.h"
+
 #include "playlistplayer.h"
+/*TODO: If you include this, you get a problem with
+    m_main_time = manage( new maintime( ));*/
+#include "playlist_wnd.h"
 
 
 #include "pixmaps/play2.xpm"
@@ -263,7 +264,7 @@ mainwnd::mainwnd(perform *a_p):
 
 
     m_perf_edit = new perfedit( m_mainperf );
-    //m_playlist_wnd = new playlist_wnd( m_mainperf);
+//    m_playlist_wnd = new playlist_wnd( m_mainperf);
     m_playplay = new playlist_player();
 
     m_sigpipe[0] = -1;
@@ -335,8 +336,8 @@ mainwnd::open_playlist_player( void )
     //if (m_playlist->is_visible())
     //    m_playlist->hide();
     //else {
-        //m_playlist_wnd->init_before_show();
-        //m_playlist_wnd->show_all();
+    //m_playlist_wnd->init_before_show();
+    //m_playlist_wnd->show_all();
 
     m_playplay->init_before_show();
     m_playplay->show_all();

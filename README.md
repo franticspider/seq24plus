@@ -35,6 +35,12 @@ What to do with a fresh repository checkout?
     Apply "autoreconf" to get a configure script, then read INSTALL.
 
 ----
+#DEV NOTES
+
+If you add new .cpp or .h files, you'll need to modify Makefile.am, and then run ./configure to generate Makefile.in and Makefile
+
+
+
 
 ----
 #TODO list:

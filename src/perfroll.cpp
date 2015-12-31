@@ -354,9 +354,6 @@ void perfroll::draw_sequence_on( Glib::RefPtr<Gdk::Drawable> a_draw, int a_seque
             while ( seq->get_next_trigger( &tick_on, &tick_off, &selected, &offset  )){
 	
                 if ( tick_off > 0 ){
-                	//SJHDEBUG:
-                	//TODO: Move this calculation to file->open and also whenever a perfroll is changed.
-                	//printf("Sequence %d, tickoff = %d\n",a_sequence+m_sequence_offset,tick_off);
                 	fflush(stdout);
 
                 	long x_on  = tick_on  / c_perf_scale_x;

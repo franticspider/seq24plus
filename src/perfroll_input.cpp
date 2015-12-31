@@ -5,12 +5,16 @@
 /* Trying to update the max_tick in m_perform whenever necessary
  * To achieve this, we'll update whenever we update MousePtr,
  */
-void FruityPerfInput::update(perfroll& ths){
+void FruityPerfInput::update(perfroll& ths, bool update_max=true){
 
 	/* TODO: There is a risk that this'll be too slow
 	 * if we find this to be the case, we'll have to update a bit more sensitively
 	 */
-	ths.m_mainperf->update_max_tick();
+
+	//TODO: Need to do this for the non-fruity perfinput too!
+	if(update_max){
+		ths.m_mainperf->update_max_tick();
+	}
 
 	updateMousePtr(ths);
 }
@@ -308,7 +312,7 @@ bool FruityPerfInput::on_motion_notify_event(GdkEventMotion* a_ev, perfroll& ths
         }
     }
 
-    update/*MousePtr*/( ths );
+    update/*MousePtr*/( ths , false);
     return true;
 }
 
