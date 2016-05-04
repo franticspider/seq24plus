@@ -1,0 +1,6 @@
+/home/sjh/git/seq24plus/tests/song1.midi
+/home/sjh/git/seq24plus/tests/s2.midi
+/home/sjh/Desktop/Dropbox/sjh/HowBuildingsFail/scripts/live160408/set/02_IAmYourJob.midi
+/home/sjh/Desktop/Dropbox/sjh/HowBuildingsFail/scripts/live160408/set/03_UnlikeMe.midi
+/home/sjh/Desktop/Dropbox/sjh/HowBuildingsFail/scripts/live160408/set/04_CommunityPub.midi
+/home/sjh/Desktop/Dropbox/sjh/HowBuildingsFail/scripts/live160408/set/05_MindfulnessZombie.midi
