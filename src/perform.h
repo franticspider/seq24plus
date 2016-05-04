@@ -87,50 +87,73 @@ struct performcallback
 
 class perform
 {
- private:
-    //andy mute group
-    bool m_mute_group[c_gmute_tracks];
-    bool m_tracks_mute_state[c_seqs_in_set];
-    bool m_mode_group;
-    bool m_mode_group_learn;
-    int m_mute_group_selected;
-    //andy playing screen
-    int m_playing_screen;
+
+	public:
+
+		//Playlist mode
+		void 	set_playlist_mode(bool mode);
+		bool 	get_playlist_mode();
+		void 	set_playlist_file(char *fn);
+		char * 	get_playlist_current_file();
+		void 	set_playlist_next();
+		bool	get_playlist_load_next_file();
+		bool 	set_playlist_load_next_file (bool val);
+
+	private:
+
+		//Playlist mode
+		bool m_playlist_mode;
+		char *m_playlist_file;
+		int m_playlist_nfiles;
+		int m_playlist_current_idx;
+		char ** m_playlist_fileset;
+		bool m_playlist_load_next_file;
 
 
-    /* vector of sequences */
-    sequence *m_seqs[c_max_sequence];
+		//andy mute group
+		bool m_mute_group[c_gmute_tracks];
+		bool m_tracks_mute_state[c_seqs_in_set];
+		bool m_mode_group;
+		bool m_mode_group_learn;
+		int m_mute_group_selected;
+		//andy playing screen
+		int m_playing_screen;
 
-    bool m_seqs_active[ c_max_sequence ];
 
-    bool m_was_active_main[ c_max_sequence ];
-    bool m_was_active_edit[ c_max_sequence ];
-    bool m_was_active_perf[ c_max_sequence ];
-    bool m_was_active_names[ c_max_sequence ];
+		/* vector of sequences */
+		sequence *m_seqs[c_max_sequence];
 
-    bool m_sequence_state[  c_max_sequence ];
+		bool m_seqs_active[ c_max_sequence ];
 
-    /* our midibus */
-    mastermidibus m_master_bus;
+		bool m_was_active_main[ c_max_sequence ];
+		bool m_was_active_edit[ c_max_sequence ];
+		bool m_was_active_perf[ c_max_sequence ];
+		bool m_was_active_names[ c_max_sequence ];
 
-    /* pthread info */
-    pthread_t m_out_thread;
-    pthread_t m_in_thread;
-    bool m_out_thread_launched;
-    bool m_in_thread_launched;
+		bool m_sequence_state[  c_max_sequence ];
 
-    bool m_running;
-    bool m_inputing;
-    bool m_outputing;
-    bool m_looping;
+		/* our midibus */
+		mastermidibus m_master_bus;
 
-    bool m_playback_mode;
+		/* pthread info */
+		pthread_t m_out_thread;
+		pthread_t m_in_thread;
+		bool m_out_thread_launched;
+		bool m_in_thread_launched;
 
-    int thread_trigger_width_ms;
+		bool m_running;
+		bool m_inputing;
+		bool m_outputing;
+		bool m_looping;
+
+		bool m_playback_mode;
+
+		int thread_trigger_width_ms;
 
     long m_left_tick;
     long m_right_tick;
     long m_starting_tick;
+
     /*The last tick in the piece*/
     long m_max_tick;
 
@@ -158,6 +181,9 @@ class perform
     int m_screen_set;
 
     condition_var m_condition_var;
+
+    /* Flag for whether to stop at end*/
+    bool m_endstop;
 
     // do not access these directly, use set/lookup below
     std::map<unsigned int,long> key_events;
@@ -190,6 +216,13 @@ class perform
     void inner_stop();
 
  public:
+
+    /*Stop requested*/
+    bool m_stop_requested;
+
+    bool get_endstop();
+    void toggle_endstop();
+
     bool is_running();
     bool is_learn_mode() const { return m_mode_group_learn; }
 

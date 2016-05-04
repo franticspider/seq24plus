@@ -55,6 +55,22 @@ class mainwnd : public Gtk::Window, public performcallback
 
  private:
 
+    /*sjh: playlist stuff */
+    //TRYING:
+    Image 						*m_s24_pic;
+    //NOT WORKING:
+    Glib::RefPtr<Gdk::GC>       m_gc;
+    Glib::RefPtr<Gdk::Window>   m_window;
+    Gdk::Color    				m_black, m_white, m_grey;
+    Glib::RefPtr<Gdk::Pixmap>   m_pixmap;
+    /*TODO: This was an attempt to indicate that we are in playlist mode
+     * by changing the main image. Doesn't work though - need to
+     * rebuild the hbox and add in the image. I think the method is correct - just
+     * needs refining.
+     */
+    void set_wplaylist_mode(bool mode);
+
+
     perform  *m_mainperf;
     bool      m_modified;
     static int m_sigpipe[2];
@@ -112,7 +128,10 @@ class mainwnd : public Gtk::Window, public performcallback
     void learn_toggle();
     void open_performance_edit( );
 
-    void open_playlist_player( void ); //open the playlist editor
+    //sjh: Functions to manage a playlist:
+    void open_playlist_player( void );	//open the playlist editor
+    //void on_realize();					//Needed to create a drawable area
+
 
     void sequence_key( int a_seq );
     void update_window_title();

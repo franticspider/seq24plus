@@ -17,13 +17,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 //-----------------------------------------------------------------------------
-
+#include <string.h>
 #include "perform.h"
 #include "midibus.h"
 #include "event.h"
 #include <stdio.h>
 #ifndef __WIN32__
-#  include <time.h>
+#include <time.h>
 #endif
 #include <sched.h>
 
@@ -33,13 +33,18 @@
 
 using namespace Gtk;
 
-perform::perform()
+perform::perform():
+		m_playlist_file(NULL),
+		m_playlist_fileset(NULL),
+		m_playlist_current_idx(0)
 {
     for (int i=0; i< c_max_sequence; i++) {
 
         m_seqs[i] = NULL;
         m_seqs_active[i] = false;
     }
+
+    m_playlist_mode = false;
 
     m_mute_group_selected = 0;
     m_mode_group = true;
@@ -138,6 +143,9 @@ perform::perform()
     set_key_group( GDK_X,  25 );
     set_key_group( GDK_Y,  13 );
     set_key_group( GDK_Z,  24 );
+
+
+	m_stop_requested = false;
 
     m_key_bpm_up = GDK_apostrophe;
     m_key_bpm_dn = GDK_semicolon;
@@ -346,7 +354,7 @@ void perform::set_mode_group_learn (void)
     set_mode_group_mute();
     m_mode_group_learn = true;
     for (size_t x = 0; x < m_notify.size(); ++x)
-        m_notify[x]->on_grouplearnchange( true );
+        m_notify[x]->on_grouplearnchange( true ); //TODO: <- sjh: this doesn't appear to do anything - function is empty....
 }
 
 
@@ -433,6 +441,9 @@ perform::~perform()
             delete m_seqs[i];
         }
     }
+
+    if(m_playlist_file != NULL)
+    	free(m_playlist_file);
 }
 
 
@@ -522,8 +533,8 @@ void perform::update_max_tick(){
 		}
 	}
 	//TODO - if getopt -v would be useful for debugging
-	printf("Sequence %d, tickoff = %d, max_tick = %d\n",last_seq,tick_off,m_max_tick);
-	fflush(stdout);
+	//printf("Sequence %d, tickoff = %d, max_tick = %d\n",last_seq,tick_off,m_max_tick);
+	//fflush(stdout);
 }
 
 
@@ -853,10 +864,19 @@ void perform::play( long a_tick )
 
     if(m_tick > m_max_tick){
     	//todo: This can be called more than once - probably because it can take some time for the thread to stop
-    	//is this a problem? dunno...
-    	printf("We are at end of the sequences, stopping\n");
-    	stop_jack();
-    	stop();
+    	//is this a problem? dunno... easy to fix with a toggle...
+		printf("We are at end of the playroll, m_stop_requested is %d\n",m_stop_requested);
+    	if(!m_stop_requested){
+    		m_stop_requested = true;
+			printf("We are at end of the playroll, stopping (perform.cpp), m_max_tick is %d\n",(int) m_max_tick);
+			stop_jack();
+			stop();
+			/* Weird: even this small change is causing thread issues... */
+			if(m_playlist_mode){
+				set_playlist_next();
+				//m_playlist_load_next_file = true;
+			}
+    	}
     }
 
 
@@ -982,6 +1002,7 @@ void perform::position_jack( bool a_state )
 
     long current_tick = 0;
 
+    //todo: check what this is doing as it seems to stop perfedit from endstopping
     if ( a_state ){
         current_tick = m_left_tick;
     }
@@ -1031,6 +1052,9 @@ void perform::position_jack( bool a_state )
 
 void perform::start(bool a_state)
 {
+
+
+	m_stop_requested = false;
     if (m_jack_running) {
         return;
     }
@@ -1044,7 +1068,7 @@ void perform::stop()
     if (m_jack_running) {
         return;
     }
-
+    //This is never called!
     inner_stop();
 }
 
@@ -1304,6 +1328,7 @@ void jack_session_callback(jack_session_event_t *event, void *arg )
  */
 void perform::output_func(void)
 {
+
     while (m_outputing) {
 
         //printf ("waiting for signal\n");
@@ -1586,14 +1611,14 @@ void perform::output_func(void)
                     /* printf( "current_tick[%lf] delta[%lf]\n", current_tick, jack_ticks_delta ); */
 
 
-                    long ptick, pbeat, pbar;
+                    long pbeat, pbar;
 
                     pbar  = (long) ((long) m_jack_tick / (m_jack_pos.ticks_per_beat *  m_jack_pos.beats_per_bar ));
 
                     pbeat = (long) ((long) m_jack_tick % (long) (m_jack_pos.ticks_per_beat *  m_jack_pos.beats_per_bar ));
                     pbeat = pbeat / (long) m_jack_pos.ticks_per_beat;
 
-                    ptick = (long) m_jack_tick % (long) m_jack_pos.ticks_per_beat;
+                    //ptick = (long) m_jack_tick % (long) m_jack_pos.ticks_per_beat;
 
 
                     //printf( " bbb [%2d:%2d:%4d]", pbar+1, pbeat+1, ptick );
@@ -1974,7 +1999,7 @@ void perform::input_func(void)
                     }
                     // midi continue: start from current pos.
                     else if (ev.get_status() == EVENT_MIDI_CONTINUE)
-                    {
+                    {	//todo: figure out if this works...!
                         m_midiclockrunning = true;
                         start(false);
                         //m_usemidiclock = true;
@@ -2360,6 +2385,18 @@ void print_jack_pos( jack_position_t* jack_pos ){
     printf( "    next_time        [%lf]\n", jack_pos->next_time );
 }
 
+
+
+bool perform::get_endstop(){
+	return m_endstop;
+}
+
+void perform::toggle_endstop(){
+	m_endstop = !m_endstop;
+}
+
+
+
 //This looks like a test program!
 #if 0
 
@@ -2420,5 +2457,75 @@ int main ( void )
 
 #endif
 
+/****************************************************/
+
+void perform::set_playlist_mode(bool mode){
+	m_playlist_mode = mode;
+}
+
+bool perform::get_playlist_mode(){
+	return m_playlist_mode;
+}
+
+void perform::set_playlist_file(char *fn){
+	const int flen = 250; //todo: sjh: set this somewhere
+	if(m_playlist_file == NULL){
+		m_playlist_file = (char *) malloc(flen * sizeof(char));
+		memset(m_playlist_file,0,flen*sizeof(char));
+	}
+	strcpy(m_playlist_file,fn);
+
+
+	/*Now read the file*/
+	FILE *fp;
+	char str[flen];
+	int nfiles = 0;
+	if((fp=fopen(m_playlist_file,"r"))!=NULL){
+		//Count the lines:
+		while(fgets(str,flen,fp)!=NULL){
+			nfiles++;
+		}
+		m_playlist_nfiles = nfiles;
+		m_playlist_fileset = (char **)malloc(m_playlist_nfiles*sizeof(char *));
+		rewind(fp);
+		nfiles = 0;
+		while(fgets(str,flen,fp)!=NULL){
+			m_playlist_fileset[nfiles] = (char *)malloc(flen*sizeof(char));
+			strncpy(m_playlist_fileset[nfiles],strtok(str, "\n"),flen);//todo: might need to use strtok to strip out newlines.
+			nfiles++;
+		}
+	}
+	else{
+		//TODO: sjh: Error box needs to handle bad files..
+        //Gtk::MessageDialog errdialog(*this,
+        //        "Error reading playlist file: " + m_playlist_file, false,
+        //        Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
+        //errdialog.run();
+		printf("Unable to open playlist file %s\n",m_playlist_file);
+        set_playlist_mode(false);
+	}
+}
+
+char * perform::get_playlist_current_file(){
+	return m_playlist_fileset[m_playlist_current_idx];
+}
+
+void perform::set_playlist_next(){
+	m_playlist_current_idx++;
+	if(m_playlist_current_idx == m_playlist_nfiles){
+		m_playlist_mode = false;
+	}
+	else{
+		 m_playlist_load_next_file = false;
+	}
+}
+
+bool perform::get_playlist_load_next_file(){
+	return m_playlist_load_next_file;
+}
+
+void perform::set_playlist_load_next_file (bool val){
+	m_playlist_load_next_file = val;
+}
 
 #endif

@@ -122,12 +122,15 @@ int main(int argc, char *argv[])
     /* parse parameters */
     int c;
 
+    /* the main performance object */
+    perform p;
+
     while (true) {
 
         /* getopt_long stores the option index here. */
         int option_index = 0;
 
-        c = getopt_long(argc, argv, "C:hi:jJmM:pPsSU:Vx:", long_options,
+        c = getopt_long(argc, argv, "C:hi:jJmM:pPsSU:Vx:X:", long_options,
                 &option_index);
 
         /* Detect the end of the options. */
@@ -227,6 +230,11 @@ int main(int argc, char *argv[])
                 global_interactionmethod = (interaction_method_e)atoi(optarg);
                 break;
 
+            case 'X':
+            	p.set_playlist_mode(true);
+            	p.set_playlist_file(optarg);
+            	break;
+
             default:
                 break;
         }
@@ -250,9 +258,6 @@ int main(int argc, char *argv[])
             global_user_instrument_definitions[i].controllers_active[j] = false;
     }
 
-
-    /* the main performance object */
-    perform p;
 
     p_font_renderer = new font();
 
@@ -304,6 +309,22 @@ int main(int argc, char *argv[])
             seq24_window.open_file(argv[optind]);
         else
             printf("File not found: %s\n", argv[optind]);
+    }
+    /* sjh: ok, we can load the file from the playlist if we are in that mode
+     * we have to loop through every entry in the list and drop out if its
+     * the end of the list and we haven't loaded a single file yet...
+     *
+     * TODO: this function is repeated verbatim in mainwnd.cpp...
+     */
+    while(p.get_playlist_mode()){
+    	if(Glib::file_test(p.get_playlist_current_file(), Glib::FILE_TEST_EXISTS)){
+            seq24_window.open_file(p.get_playlist_current_file());
+            break;
+    	}
+    	else{
+            printf("File not found: %s\n", p.get_playlist_current_file());
+            p.set_playlist_next();
+    	}
     }
 
     /* connect to lash daemon and poll events*/

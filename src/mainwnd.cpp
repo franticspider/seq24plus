@@ -24,17 +24,17 @@
 #include <cstring>
 #include <gtk/gtkversion.h>
 
-//#include "playlist_wnd.h"
-
 #include "mainwnd.h"
 #include "perform.h"
 #include "midifile.h"
 #include "perfedit.h"
 
+/*sjh: playlist classes */
 #include "playlistplayer.h"
 /*TODO: If you include this, you get a problem with
     m_main_time = manage( new maintime( ));*/
-#include "playlist_wnd.h"
+/* NOT CURRENTLY USED */
+//#include "playlist_wnd.h"
 
 
 #include "pixmaps/play2.xpm"
@@ -43,6 +43,7 @@
 #include "pixmaps/learn2.xpm"
 #include "pixmaps/perfedit.xpm"
 #include "pixmaps/seq24.xpm"
+#include "pixmaps/seq24_playlist.xpm"
 #include "pixmaps/seq24_32.xpm"
 
 bool is_pattern_playing = false;
@@ -60,6 +61,12 @@ mainwnd::mainwnd(perform *a_p):
     m_options(NULL)
 {
     set_icon(Gdk::Pixbuf::create_from_xpm_data(seq24_32_xpm));
+
+
+    /*sjh stuff...*/
+    set_wplaylist_mode(m_mainperf->get_playlist_mode());
+    /*............*/
+
 
     /* register for notification */
     m_mainperf->m_notify.push_back( this );
@@ -120,9 +127,10 @@ mainwnd::mainwnd(perform *a_p):
                 mem_fun(*this, &mainwnd::about_dialog)));
 
     /* top line items */
-    HBox *tophbox = manage( new HBox( false, 0 ) );
-    tophbox->pack_start(*manage(new Image(
-                    Gdk::Pixbuf::create_from_xpm_data(seq24_xpm))),
+    HBox *m_tophbox = manage( new HBox( false, 0 ) );
+    tophbox->pack_start(
+    		*m_s24_pic,
+    		// *manage(new Image(Gdk::Pixbuf::create_from_xpm_data(seq24_xpm))),
             false, false);
 
     // adjust placement...
@@ -134,6 +142,27 @@ mainwnd::mainwnd(perform *a_p):
 
     /* timeline */
     hbox3->pack_start( *m_main_time, false, false );
+    // Now we can allocate any additional resources we need
+
+    /* This causes a crash: */
+    //m_window = get_window();
+    //m_gc = Gdk::GC::create( m_window );
+    //m_window->clear();
+    //
+    //m_pixmap = Gdk::Pixmap::create(m_window,
+    //                               c_names_x,
+    //                               c_names_y  * c_total_seqs + 1,
+    //                               -1);
+
+    /* Add the filename box that we want to manipulate */
+    /*
+    m_gc->set_foreground(m_black);
+    hbox3->draw_rectangle(m_gc,true,
+                             0,
+                             22 ,
+                             6*24,
+                             27);
+	*/
 
     /* group learn button */
     m_button_learn = manage( new Button( ));
@@ -286,6 +315,27 @@ mainwnd::~mainwnd()
 }
 
 
+/* sjh: added to be able to draw something.
+void
+mainwnd::on_realize()
+{
+    // we need to do the default realize
+    Gtk::DrawingArea::on_realize();
+
+    // Now we can allocate any additional resources we need
+    m_window = get_window();
+    m_gc = Gdk::GC::create( m_window );
+    m_window->clear();
+
+    m_pixmap = Gdk::Pixmap::create(m_window,
+                                   c_names_x,
+                                   c_names_y  * c_total_seqs + 1,
+                                   -1);
+}
+*/
+
+
+
 // This is the GTK timer callback, used to draw our current time and bpm
 // ondd_events( the main window
 bool
@@ -306,6 +356,34 @@ mainwnd::timer_callback(  )
         m_adjust_ss->set_value( m_mainperf->get_screenset());
         m_entry_notes->set_text(*m_mainperf->get_screen_set_notepad(
                     m_mainperf->get_screenset()));
+    }
+
+    ///* SJH CANDIDATE THREAD STUCK ERROR */
+    if(m_mainperf->get_playlist_load_next_file()){/* sjh */
+    //	//TODO: This should be a separate function, then we can call it from seq24.cpp
+    //    while(m_mainperf->get_playlist_mode()){
+    //    	if(Glib::file_test(m_mainperf->get_playlist_current_file(), Glib::FILE_TEST_EXISTS)){
+    //            open_file(m_mainperf->get_playlist_current_file());
+    //            break;
+    //    	}
+    //   	else{
+    //            printf("File not found: %s\n", m_mainperf->get_playlist_current_file());
+    //            m_mainperf->set_playlist_next();
+    //    	}
+    //    }
+		m_mainperf->set_playlist_next();
+    	printf("Can we load file %s?\n",m_mainperf->get_playlist_current_file());
+        while(m_mainperf->get_playlist_mode()){
+        	if(Glib::file_test(m_mainperf->get_playlist_current_file(), Glib::FILE_TEST_EXISTS)){
+                open_file(m_mainperf->get_playlist_current_file());
+                break;
+        	}
+        	else{
+                printf("File not found: %s\n", m_mainperf->get_playlist_current_file());
+                m_mainperf->set_playlist_next();
+        	}
+        	//todo: need to handle getting to the end of the list etstet.....
+        }
     }
 
     return true;
@@ -355,6 +433,7 @@ mainwnd::options_dialog( void )
 }
 
 
+//todo: reconcile with perfedit::start_playing..
 void
 mainwnd::start_playing( void )
 {
@@ -372,6 +451,13 @@ mainwnd::stop_playing( void )
     m_mainperf->stop();
     m_main_wid->update_sequences_on_window();
     is_pattern_playing = false;
+
+	/* TODO: There's a problem doing this here - the thing hasn't *actually* stopped - need to find
+	 * the right place for this...
+	 */
+	if(m_mainperf->get_playlist_mode()){
+		 m_mainperf->set_playlist_load_next_file (true);
+	}
 }
 
 void
@@ -492,9 +578,31 @@ void mainwnd::file_save_as()
 }
 
 
+void mainwnd::set_wplaylist_mode(bool mode){
+
+	/* pass the mode into the performance */
+	m_mainperf->set_playlist_mode(mode);
+
+	/* set up the main window */
+    if(m_mainperf->get_playlist_mode()){
+        m_s24_pic = new Image(Gdk::Pixbuf::create_from_xpm_data(seq24_xpm_playlist));
+    }
+    else{
+		m_s24_pic = new Image(Gdk::Pixbuf::create_from_xpm_data(seq24_xpm));
+    }
+
+
+}
+
 void mainwnd::open_file(const Glib::ustring& fn)
 {
     bool result;
+
+    /*We aren't using a playlist if we've opened a file*/
+    set_wplaylist_mode(false);
+
+
+
 
     m_mainperf->clear_all();
 
