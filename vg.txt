@@ -1,0 +1,6 @@
+Finished parsing with getopt
+Reading [/home/sjh/.seq24rc]
+[JACK transport master]
+Playlist mode is false
+[JACK sync disabled]
+Writing [/home/sjh/.seq24rc]

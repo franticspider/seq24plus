@@ -97,7 +97,7 @@ class perform
 		char * 	get_playlist_current_file();
 		void 	set_playlist_next();
 		bool	get_playlist_load_next_file();
-		bool 	set_playlist_load_next_file (bool val);
+		void 	set_playlist_load_next_file (bool val);
 
 	private:
 

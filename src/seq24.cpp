@@ -306,7 +306,7 @@ int main(int argc, char *argv[])
     if (optind < argc)
     {
         if (Glib::file_test(argv[optind], Glib::FILE_TEST_EXISTS))
-            seq24_window.open_file(argv[optind]);
+            seq24_window.open_file(argv[optind],false);
         else
             printf("File not found: %s\n", argv[optind]);
     }
@@ -318,13 +318,20 @@ int main(int argc, char *argv[])
      */
     while(p.get_playlist_mode()){
     	if(Glib::file_test(p.get_playlist_current_file(), Glib::FILE_TEST_EXISTS)){
-            seq24_window.open_file(p.get_playlist_current_file());
+            seq24_window.open_file(p.get_playlist_current_file(),true);
             break;
     	}
     	else{
             printf("File not found: %s\n", p.get_playlist_current_file());
             p.set_playlist_next();
     	}
+    }
+
+    if(p.get_playlist_mode()){
+    	printf("Playlist mode is true\n");
+    }
+    else{
+    	printf("Playlist mode is false\n");
     }
 
     /* connect to lash daemon and poll events*/

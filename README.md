@@ -39,7 +39,13 @@ What to do with a fresh repository checkout?
 
 If you add new .cpp or .h files, you'll need to modify Makefile.am, and then run ./configure to generate Makefile.in and Makefile
 
+###Compiling for debug
 
+The way to do this is to pass the debug flags to the configure command like this:
+
+    ./configure CPPFLAGS=-DDEBUG CXXFLAGS="-g -O0"
+
+###Checking with Valgrind
 
 
 ----

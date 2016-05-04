@@ -127,7 +127,7 @@ mainwnd::mainwnd(perform *a_p):
                 mem_fun(*this, &mainwnd::about_dialog)));
 
     /* top line items */
-    HBox *m_tophbox = manage( new HBox( false, 0 ) );
+    HBox *tophbox = manage( new HBox( false, 0 ) );
     tophbox->pack_start(
     		*m_s24_pic,
     		// *manage(new Image(Gdk::Pixbuf::create_from_xpm_data(seq24_xpm))),
@@ -359,31 +359,33 @@ mainwnd::timer_callback(  )
     }
 
     ///* SJH CANDIDATE THREAD STUCK ERROR */
-    if(m_mainperf->get_playlist_load_next_file()){/* sjh */
-    //	//TODO: This should be a separate function, then we can call it from seq24.cpp
-    //    while(m_mainperf->get_playlist_mode()){
-    //    	if(Glib::file_test(m_mainperf->get_playlist_current_file(), Glib::FILE_TEST_EXISTS)){
-    //            open_file(m_mainperf->get_playlist_current_file());
-    //            break;
-    //    	}
-    //   	else{
-    //            printf("File not found: %s\n", m_mainperf->get_playlist_current_file());
-    //            m_mainperf->set_playlist_next();
-    //    	}
-    //    }
-		m_mainperf->set_playlist_next();
-    	printf("Can we load file %s?\n",m_mainperf->get_playlist_current_file());
-        while(m_mainperf->get_playlist_mode()){
-        	if(Glib::file_test(m_mainperf->get_playlist_current_file(), Glib::FILE_TEST_EXISTS)){
-                open_file(m_mainperf->get_playlist_current_file());
-                break;
-        	}
-        	else{
-                printf("File not found: %s\n", m_mainperf->get_playlist_current_file());
-                m_mainperf->set_playlist_next();
-        	}
-        	//todo: need to handle getting to the end of the list etstet.....
-        }
+    if(m_mainperf->get_playlist_mode()){
+		if(m_mainperf->get_playlist_load_next_file()){/* sjh */
+			//	//TODO: This should be a separate function, then we can call it from seq24.cpp
+			//    while(m_mainperf->get_playlist_mode()){
+			//    	if(Glib::file_test(m_mainperf->get_playlist_current_file(), Glib::FILE_TEST_EXISTS)){
+			//            open_file(m_mainperf->get_playlist_current_file());
+			//            break;
+			//    	}
+			//   	else{
+			//            printf("File not found: %s\n", m_mainperf->get_playlist_current_file());
+			//            m_mainperf->set_playlist_next();
+			//    	}
+			//    }
+			m_mainperf->set_playlist_next();
+			printf("Can we load file %s?\n",m_mainperf->get_playlist_current_file());
+			while(m_mainperf->get_playlist_mode()){
+				if(Glib::file_test(m_mainperf->get_playlist_current_file(), Glib::FILE_TEST_EXISTS)){
+					open_file(m_mainperf->get_playlist_current_file(),true);
+					break;
+				}
+				else{
+					printf("File not found: %s\n", m_mainperf->get_playlist_current_file());
+					m_mainperf->set_playlist_next();
+				}
+				//todo: need to handle getting to the end of the list etstet.....
+			}
+		}
     }
 
     return true;
@@ -594,12 +596,12 @@ void mainwnd::set_wplaylist_mode(bool mode){
 
 }
 
-void mainwnd::open_file(const Glib::ustring& fn)
+void mainwnd::open_file(const Glib::ustring& fn, bool playlist_mode)
 {
     bool result;
 
     /*We aren't using a playlist if we've opened a file*/
-    set_wplaylist_mode(false);
+    set_wplaylist_mode(playlist_mode);
 
 
 
@@ -679,7 +681,7 @@ void mainwnd::choose_file()
 
     switch(result) {
         case(Gtk::RESPONSE_OK):
-            open_file(dialog.get_filename());
+            open_file(dialog.get_filename(), false);
 
         default:
             break;

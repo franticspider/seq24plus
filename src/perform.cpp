@@ -873,8 +873,13 @@ void perform::play( long a_tick )
 			stop();
 			/* Weird: even this small change is causing thread issues... */
 			if(m_playlist_mode){
-				set_playlist_next();
+				//set_playlist_next();
 				//m_playlist_load_next_file = true;
+				printf("Playlist mode is true! - setting load_next_file flag\n");
+				set_playlist_load_next_file (true);
+			}
+			else{
+				printf("Playlist mode is false!\n");
 			}
     	}
     }

@@ -157,7 +157,7 @@ class mainwnd : public Gtk::Window, public performcallback
     mainwnd(perform *a_p);
     ~mainwnd();
 
-    void open_file(const Glib::ustring&);
+    void open_file(const Glib::ustring&, bool playlist_mode);
     bool on_delete_event(GdkEventAny *a_e);
     bool on_key_press_event(GdkEventKey* a_ev);
     bool on_key_release_event(GdkEventKey* a_ev);

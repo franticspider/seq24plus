@@ -14,7 +14,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration buildProperties="" description="" id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.1112833039" name="Build (GNU)" parent="org.eclipse.cdt.build.core.emptycfg">
+				<configuration artifactName="${ProjName}" buildProperties="" description="" id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.1112833039" name="Build (GNU)" parent="org.eclipse.cdt.build.core.emptycfg">
 					<folderInfo id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.1112833039.1436181848" name="/" resourcePath="">
 						<toolChain id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.528244818" name="GNU Autotools Toolchain" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolChain">
 							<targetPlatform id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform.1357011425" isAbstract="false" name="GNU Autotools Target Platform" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform"/>
@@ -31,14 +31,10 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.1112833039.1147485720" name="perform.cpp" rcbsApplicability="disable" resourcePath="src/perform.cpp" toolsToInvoke="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.227099432.2093868213">
-						<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.227099432.2093868213" name="GCC C++ Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.227099432">
-							<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.2037562184" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
-						</tool>
-					</fileInfo>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="packages"/>
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -53,5 +49,10 @@
 		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.toolChain.1112833039;org.eclipse.linuxtools.cdt.autotools.core.toolChain.1112833039.1436181848;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.227099432;cdt.managedbuild.tool.gnu.cpp.compiler.input.687194089">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Build (GNU)">
+			<resource resourceType="PROJECT" workspacePath="/seq24plus"/>
+		</configuration>
 	</storageModule>
 </cproject>
