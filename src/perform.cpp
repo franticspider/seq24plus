@@ -34,9 +34,9 @@
 using namespace Gtk;
 
 perform::perform():
-		m_playlist_file(NULL),
-		m_playlist_fileset(NULL),
-		m_playlist_current_idx(0)
+		m_setlist_file(NULL),
+		m_setlist_fileset(NULL),
+		m_setlist_current_idx(0)
 {
     for (int i=0; i< c_max_sequence; i++) {
 
@@ -44,7 +44,7 @@ perform::perform():
         m_seqs_active[i] = false;
     }
 
-    m_playlist_mode = false;
+    m_setlist_mode = false;
 
     m_mute_group_selected = 0;
     m_mode_group = true;
@@ -165,6 +165,10 @@ perform::perform():
 
     m_key_start  = GDK_space;
     m_key_stop   = GDK_Escape;
+
+    //setlist next/prev keys:
+    m_key_leftarrow = GDK_Left; //NOT GDK_leftarrow;
+    m_key_rightarrow = GDK_Right; //NOT GDK_rightarrow;
 
     m_offset = 0;
     m_control_status = 0;
@@ -442,8 +446,8 @@ perform::~perform()
         }
     }
 
-    if(m_playlist_file != NULL)
-    	free(m_playlist_file);
+    if(m_setlist_file != NULL)
+    	free(m_setlist_file);
 }
 
 
@@ -872,11 +876,11 @@ void perform::play( long a_tick )
 			stop_jack();
 			stop();
 			/* Weird: even this small change is causing thread issues... */
-			if(m_playlist_mode){
+			if(m_setlist_mode){
 				//set_playlist_next();
-				//m_playlist_load_next_file = true;
+				//m_setlist_load_next_file = true;
 				printf("Playlist mode is true! - setting load_next_file flag\n");
-				set_playlist_load_next_file (true);
+				set_setlist_load_next_file (true);
 			}
 			else{
 				printf("Playlist mode is false!\n");
@@ -1070,9 +1074,17 @@ void perform::start(bool a_state)
 
 void perform::stop()
 {
-    if (m_jack_running) {
-        return;
-    }
+
+	/*todo: sjh trying commenting the next out to fix the bpm issue
+	 * (if you don't stop before loding a new file, the bpm isn't changed from the old song
+	 *
+	 * This seems to work, but if there are problems when composing, this might be the issue...
+	 * */
+	//if (m_jack_running) {
+    //    return;
+    //}
+
+
     //This is never called!
     inner_stop();
 }
@@ -2305,7 +2317,7 @@ void jack_timebase_callback(jack_transport_state_t state,
         jack_position_t *pos, int new_pos, void *arg)
 {
     static double jack_tick;
-    static jack_nframes_t last_frame;
+    //sjh: static jack_nframes_t last_frame;
     static jack_nframes_t current_frame;
     static jack_transport_state_t state_current;
     static jack_transport_state_t state_last;
@@ -2341,7 +2353,7 @@ void jack_timebase_callback(jack_transport_state_t state,
             pos->beats_per_minute / (pos->frame_rate * 60.0);
 		
 		jack_tick = (jack_delta_tick < 0) ? -jack_delta_tick : jack_delta_tick;
-		last_frame = current_frame;
+		//sjh: last_frame = current_frame;
 		
 		long ptick = 0, pbeat = 0, pbar = 0;
 	
@@ -2464,73 +2476,97 @@ int main ( void )
 
 /****************************************************/
 
-void perform::set_playlist_mode(bool mode){
-	m_playlist_mode = mode;
+void perform::set_setlist_mode(bool mode){
+	m_setlist_mode = mode;
 }
 
-bool perform::get_playlist_mode(){
-	return m_playlist_mode;
+bool perform::get_setlist_mode(){
+	return m_setlist_mode;
 }
 
-void perform::set_playlist_file(char *fn){
+void perform::set_setlist_file(char *fn){
 	const int flen = 250; //todo: sjh: set this somewhere
-	if(m_playlist_file == NULL){
-		m_playlist_file = (char *) malloc(flen * sizeof(char));
-		memset(m_playlist_file,0,flen*sizeof(char));
+	if(m_setlist_file == NULL){
+		m_setlist_file = (char *) malloc(flen * sizeof(char));
+		memset(m_setlist_file,0,flen*sizeof(char));
 	}
-	strcpy(m_playlist_file,fn);
+	strcpy(m_setlist_file,fn);
 
 
 	/*Now read the file*/
 	FILE *fp;
 	char str[flen];
 	int nfiles = 0;
-	if((fp=fopen(m_playlist_file,"r"))!=NULL){
+	if((fp=fopen(m_setlist_file,"r"))!=NULL){
 		//Count the lines:
 		while(fgets(str,flen,fp)!=NULL){
 			nfiles++;
 		}
-		m_playlist_nfiles = nfiles;
-		m_playlist_fileset = (char **)malloc(m_playlist_nfiles*sizeof(char *));
+		m_setlist_nfiles = nfiles;
+		m_setlist_fileset = (char **)malloc(m_setlist_nfiles*sizeof(char *));
 		rewind(fp);
 		nfiles = 0;
 		while(fgets(str,flen,fp)!=NULL){
-			m_playlist_fileset[nfiles] = (char *)malloc(flen*sizeof(char));
-			strncpy(m_playlist_fileset[nfiles],strtok(str, "\n"),flen);//todo: might need to use strtok to strip out newlines.
+			m_setlist_fileset[nfiles] = (char *)malloc(flen*sizeof(char));
+			strncpy(m_setlist_fileset[nfiles],strtok(str, "\n"),flen);//todo: might need to use strtok to strip out newlines.
 			nfiles++;
 		}
 	}
 	else{
 		//TODO: sjh: Error box needs to handle bad files..
         //Gtk::MessageDialog errdialog(*this,
-        //        "Error reading playlist file: " + m_playlist_file, false,
+        //        "Error reading playlist file: " + m_setlist_file, false,
         //        Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
         //errdialog.run();
-		printf("Unable to open playlist file %s\n",m_playlist_file);
-        set_playlist_mode(false);
+		printf("Unable to open playlist file %s\n",m_setlist_file);
+        set_setlist_mode(false);
 	}
 }
 
-char * perform::get_playlist_current_file(){
-	return m_playlist_fileset[m_playlist_current_idx];
+char * perform::get_setlist_current_file(){
+	return m_setlist_fileset[m_setlist_current_idx];
 }
 
-void perform::set_playlist_next(){
-	m_playlist_current_idx++;
-	if(m_playlist_current_idx == m_playlist_nfiles){
-		m_playlist_mode = false;
+void perform::set_setlist_next(){
+	m_setlist_current_idx++;
+	if(m_setlist_current_idx >= m_setlist_nfiles){
+		/* Now we explicity choose to exit setlist mode */
+		//m_setlist_mode = false;
+		m_setlist_current_idx = m_setlist_nfiles -1;
+		m_setlist_load_next_file = false;
 	}
 	else{
-		 m_playlist_load_next_file = false;
+		m_setlist_load_next_file = false;
 	}
 }
 
-bool perform::get_playlist_load_next_file(){
-	return m_playlist_load_next_file;
+bool perform::get_setlist_load_next_file(){
+	return m_setlist_load_next_file;
 }
 
-void perform::set_playlist_load_next_file (bool val){
-	m_playlist_load_next_file = val;
+void perform::set_setlist_load_next_file (bool val){
+	m_setlist_load_next_file = val;
 }
+
+
+int	perform::get_setlist_index(){
+	return m_setlist_current_idx;
+}
+
+void perform::offset_setlist_index(int offset){
+	m_setlist_current_idx = min(m_setlist_nfiles-1,max(0,m_setlist_current_idx+offset));
+}
+
+bool perform::set_setlist_index(int index){
+
+	if(index < 0)
+		return false;
+	if(index >= m_setlist_nfiles)
+		return false;
+
+	m_setlist_current_idx = index;
+	return true;
+}
+
 
 #endif

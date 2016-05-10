@@ -293,6 +293,13 @@ perfedit::on_key_press_event(GdkEventKey* a_ev)
 
         if(a_ev->keyval == m_mainperf->m_key_start || a_ev->keyval == m_mainperf->m_key_stop)
           event_was_handled = true;
+
+        if(a_ev->keyval == m_mainperf->m_key_leftarrow){
+        	m_mainperf->m_setjump = -1;
+        }
+        if(a_ev->keyval == m_mainperf->m_key_rightarrow){
+        	m_mainperf->m_setjump = -1;
+        }
     }
 
     if(!event_was_handled)

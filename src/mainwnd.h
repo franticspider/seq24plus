@@ -55,7 +55,7 @@ class mainwnd : public Gtk::Window, public performcallback
 
  private:
 
-    /*sjh: playlist stuff */
+    /*sjh: setlist stuff */
     //TRYING:
     Image 						*m_s24_pic;
     //NOT WORKING:
@@ -63,12 +63,13 @@ class mainwnd : public Gtk::Window, public performcallback
     Glib::RefPtr<Gdk::Window>   m_window;
     Gdk::Color    				m_black, m_white, m_grey;
     Glib::RefPtr<Gdk::Pixmap>   m_pixmap;
-    /*TODO: This was an attempt to indicate that we are in playlist mode
+    /*TODO: This was an attempt to indicate that we are in setlist mode
      * by changing the main image. Doesn't work though - need to
      * rebuild the hbox and add in the image. I think the method is correct - just
      * needs refining.
      */
-    void set_wplaylist_mode(bool mode);
+    void set_wsetlist_mode(bool mode);
+    void setlist_jump(int jmp);
 
 
     perform  *m_mainperf;
@@ -124,12 +125,12 @@ class mainwnd : public Gtk::Window, public performcallback
     bool timer_callback( );
 
     void start_playing();
-    void stop_playing();
+    void stop_playing();//bool load_next);
     void learn_toggle();
     void open_performance_edit( );
 
-    //sjh: Functions to manage a playlist:
-    void open_playlist_player( void );	//open the playlist editor
+    //sjh: Functions to manage a setlist:
+    void open_setlist_player( void );	//open the setlist editor
     //void on_realize();					//Needed to create a drawable area
 
 
@@ -139,13 +140,13 @@ class mainwnd : public Gtk::Window, public performcallback
     bool is_modified();
     void file_new();
     void file_open();
-    void file_open_playlist();//sjh mod
+    void file_open_setlist();//sjh mod
     void file_save();
     void file_save_as();
     void file_exit();
     void new_file();
     bool save_file();
-    void choose_file();
+    void choose_file(bool setlist_mode);
     int query_save_changes();
     bool is_save();
     static void handle_signal(int sig);
@@ -157,7 +158,7 @@ class mainwnd : public Gtk::Window, public performcallback
     mainwnd(perform *a_p);
     ~mainwnd();
 
-    void open_file(const Glib::ustring&, bool playlist_mode);
+    bool open_file(const Glib::ustring&, bool setlist_mode);
     bool on_delete_event(GdkEventAny *a_e);
     bool on_key_press_event(GdkEventKey* a_ev);
     bool on_key_release_event(GdkEventKey* a_ev);

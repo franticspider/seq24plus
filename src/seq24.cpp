@@ -74,7 +74,7 @@ Glib::ustring global_filename = "";
 Glib::ustring last_used_dir ="/";
 std::string config_filename = ".seq24rc";
 std::string user_filename = ".seq24usr";
-bool global_print_keys = false;
+bool global_print_keys = true; //TODO: This should be set to false when you've finished debugging!
 interaction_method_e global_interactionmethod = e_seq24_interaction;
 
 bool global_with_jack_transport = false;
@@ -231,8 +231,8 @@ int main(int argc, char *argv[])
                 break;
 
             case 'X':
-            	p.set_playlist_mode(true);
-            	p.set_playlist_file(optarg);
+            	p.set_setlist_mode(true);
+            	p.set_setlist_file(optarg);
             	break;
 
             default:
@@ -316,18 +316,18 @@ int main(int argc, char *argv[])
      *
      * TODO: this function is repeated verbatim in mainwnd.cpp...
      */
-    while(p.get_playlist_mode()){
-    	if(Glib::file_test(p.get_playlist_current_file(), Glib::FILE_TEST_EXISTS)){
-            seq24_window.open_file(p.get_playlist_current_file(),true);
+    while(p.get_setlist_mode()){
+    	if(Glib::file_test(p.get_setlist_current_file(), Glib::FILE_TEST_EXISTS)){
+            seq24_window.open_file(p.get_setlist_current_file(),true);
             break;
     	}
     	else{
-            printf("File not found: %s\n", p.get_playlist_current_file());
-            p.set_playlist_next();
+            printf("File not found: %s\n", p.get_setlist_current_file());
+            p.set_setlist_next();
     	}
     }
 
-    if(p.get_playlist_mode()){
+    if(p.get_setlist_mode()){
     	printf("Playlist mode is true\n");
     }
     else{

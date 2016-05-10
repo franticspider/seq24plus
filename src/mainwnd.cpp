@@ -29,13 +29,6 @@
 #include "midifile.h"
 #include "perfedit.h"
 
-/*sjh: playlist classes */
-#include "playlistplayer.h"
-/*TODO: If you include this, you get a problem with
-    m_main_time = manage( new maintime( ));*/
-/* NOT CURRENTLY USED */
-//#include "playlist_wnd.h"
-
 
 #include "pixmaps/play2.xpm"
 #include "pixmaps/stop.xpm"
@@ -64,7 +57,7 @@ mainwnd::mainwnd(perform *a_p):
 
 
     /*sjh stuff...*/
-    set_wplaylist_mode(m_mainperf->get_playlist_mode());
+    set_wsetlist_mode(m_mainperf->get_setlist_mode());
     /*............*/
 
 
@@ -104,9 +97,9 @@ mainwnd::mainwnd(perform *a_p):
     m_menu_file->items().push_back(MenuElem("Save _as...",
                 mem_fun(*this, &mainwnd::file_save_as)));
 /** SJH: Adding the load playlist option here */
-    //TODO: Create an open_playlist function in mainwnd
-    m_menu_file->items().push_back(MenuElem("Open _playlist...",
-                mem_fun(*this, &mainwnd::file_open_playlist)));
+    //TODO: Create an open_setlist function in mainwnd
+    m_menu_file->items().push_back(MenuElem("Open _setlist...",
+                mem_fun(*this, &mainwnd::file_open_setlist)));
     m_menu_file->items().push_back(SeparatorElem());
     m_menu_file->items().push_back(MenuElem("_Import...",
                 mem_fun(*this, &mainwnd::file_import_dialog)));
@@ -142,27 +135,6 @@ mainwnd::mainwnd(perform *a_p):
 
     /* timeline */
     hbox3->pack_start( *m_main_time, false, false );
-    // Now we can allocate any additional resources we need
-
-    /* This causes a crash: */
-    //m_window = get_window();
-    //m_gc = Gdk::GC::create( m_window );
-    //m_window->clear();
-    //
-    //m_pixmap = Gdk::Pixmap::create(m_window,
-    //                               c_names_x,
-    //                               c_names_y  * c_total_seqs + 1,
-    //                               -1);
-
-    /* Add the filename box that we want to manipulate */
-    /*
-    m_gc->set_foreground(m_black);
-    hbox3->draw_rectangle(m_gc,true,
-                             0,
-                             22 ,
-                             6*24,
-                             27);
-	*/
 
     /* group learn button */
     m_button_learn = manage( new Button( ));
@@ -196,8 +168,9 @@ mainwnd::mainwnd(perform *a_p):
     m_button_stop->add(*manage(new Image(
                     Gdk::Pixbuf::create_from_xpm_data( stop_xpm ))));
     m_button_stop->signal_clicked().connect(
-            mem_fun(*this, &mainwnd::stop_playing));
+            mem_fun(*this, &mainwnd::stop_playing));/*sjh - can't pass anything into the stop_playing function because of this. */
     add_tooltip( m_button_stop, "Stop playing MIDI sequence" );
+    m_button_stop->set_can_focus(false);
     startstophbox->pack_start(*m_button_stop, Gtk::PACK_SHRINK);
 
     /* play button */
@@ -315,24 +288,34 @@ mainwnd::~mainwnd()
 }
 
 
-/* sjh: added to be able to draw something.
-void
-mainwnd::on_realize()
-{
-    // we need to do the default realize
-    Gtk::DrawingArea::on_realize();
 
-    // Now we can allocate any additional resources we need
-    m_window = get_window();
-    m_gc = Gdk::GC::create( m_window );
-    m_window->clear();
+/*
+ * move through the setlist (jmp is usually 1, but could be -1 for leftarrow...)
+ */
+void mainwnd::setlist_jump(int jmp){
 
-    m_pixmap = Gdk::Pixmap::create(m_window,
-                                   c_names_x,
-                                   c_names_y  * c_total_seqs + 1,
-                                   -1);
+	int found = 0;
+
+	while(!found){
+
+		if(m_mainperf->set_setlist_index(m_mainperf->get_setlist_index() + jmp)){
+			if(Glib::file_test(m_mainperf->get_setlist_current_file(), Glib::FILE_TEST_EXISTS)){
+				if(open_file(m_mainperf->get_setlist_current_file(),true)){
+					found = 1;
+					break;
+				}
+				else{
+					printf("File not found: %s\n", m_mainperf->get_setlist_current_file());
+					m_mainperf->set_setlist_next();
+				}
+			}
+		}
+		else{
+			printf("Setlist index %d out of range\n",m_mainperf->get_setlist_index() + jmp);
+			break;
+		}
+	}
 }
-*/
 
 
 
@@ -358,32 +341,26 @@ mainwnd::timer_callback(  )
                     m_mainperf->get_screenset()));
     }
 
-    ///* SJH CANDIDATE THREAD STUCK ERROR */
-    if(m_mainperf->get_playlist_mode()){
-		if(m_mainperf->get_playlist_load_next_file()){/* sjh */
-			//	//TODO: This should be a separate function, then we can call it from seq24.cpp
-			//    while(m_mainperf->get_playlist_mode()){
-			//    	if(Glib::file_test(m_mainperf->get_playlist_current_file(), Glib::FILE_TEST_EXISTS)){
-			//            open_file(m_mainperf->get_playlist_current_file());
-			//            break;
-			//    	}
-			//   	else{
-			//            printf("File not found: %s\n", m_mainperf->get_playlist_current_file());
-			//            m_mainperf->set_playlist_next();
-			//    	}
-			//    }
-			m_mainperf->set_playlist_next();
-			printf("Can we load file %s?\n",m_mainperf->get_playlist_current_file());
-			while(m_mainperf->get_playlist_mode()){
-				if(Glib::file_test(m_mainperf->get_playlist_current_file(), Glib::FILE_TEST_EXISTS)){
-					open_file(m_mainperf->get_playlist_current_file(),true);
+    if(m_mainperf->get_setlist_mode()){
+		if(m_mainperf->get_setlist_load_next_file()){
+
+			m_mainperf->set_setlist_next();
+			printf("Can we load file %s?\n",m_mainperf->get_setlist_current_file());
+			while(m_mainperf->get_setlist_mode()){
+				if(Glib::file_test(m_mainperf->get_setlist_current_file(), Glib::FILE_TEST_EXISTS)){
+					open_file(m_mainperf->get_setlist_current_file(),true);
 					break;
 				}
 				else{
-					printf("File not found: %s\n", m_mainperf->get_playlist_current_file());
-					m_mainperf->set_playlist_next();
+					printf("File not found: %s\n", m_mainperf->get_setlist_current_file());
+					m_mainperf->set_setlist_next();
 				}
 				//todo: need to handle getting to the end of the list etstet.....
+			}
+			if(m_mainperf->m_setjump){
+				setlist_jump(m_mainperf->m_setjump);
+				m_mainperf->m_setjump=0;
+
 			}
 		}
     }
@@ -411,7 +388,7 @@ mainwnd::open_performance_edit( void )
  * assume this happens when a playlist is opened (so no need for a separate button)
  * */
 void
-mainwnd::open_playlist_player( void )
+mainwnd::open_setlist_player( void )
 {
     //if (m_playlist->is_visible())
     //    m_playlist->hide();
@@ -457,9 +434,9 @@ mainwnd::stop_playing( void )
 	/* TODO: There's a problem doing this here - the thing hasn't *actually* stopped - need to find
 	 * the right place for this...
 	 */
-	if(m_mainperf->get_playlist_mode()){
-		 m_mainperf->set_playlist_load_next_file (true);
-	}
+	//if(m_mainperf->get_setlist_mode()){
+	//	 m_mainperf->set_setlist_load_next_file (true);
+	//}
 }
 
 void
@@ -580,13 +557,13 @@ void mainwnd::file_save_as()
 }
 
 
-void mainwnd::set_wplaylist_mode(bool mode){
+void mainwnd::set_wsetlist_mode(bool mode){
 
 	/* pass the mode into the performance */
-	m_mainperf->set_playlist_mode(mode);
+	m_mainperf->set_setlist_mode(mode);
 
 	/* set up the main window */
-    if(m_mainperf->get_playlist_mode()){
+    if(m_mainperf->get_setlist_mode()){
         m_s24_pic = new Image(Gdk::Pixbuf::create_from_xpm_data(seq24_xpm_playlist));
     }
     else{
@@ -596,15 +573,14 @@ void mainwnd::set_wplaylist_mode(bool mode){
 
 }
 
-void mainwnd::open_file(const Glib::ustring& fn, bool playlist_mode)
+bool mainwnd::open_file(const Glib::ustring& fn, bool setlist_mode)
 {
     bool result;
 
+    stop_playing();
+
     /*We aren't using a playlist if we've opened a file*/
-    set_wplaylist_mode(playlist_mode);
-
-
-
+    set_wsetlist_mode(setlist_mode);
 
     m_mainperf->clear_all();
 
@@ -617,7 +593,7 @@ void mainwnd::open_file(const Glib::ustring& fn, bool playlist_mode)
                 "Error reading file: " + fn, false,
                 Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
         errdialog.run();
-        return;
+        return false;
     }
 
     last_used_dir = fn.substr(0, fn.rfind("/") + 1);
@@ -632,6 +608,7 @@ void mainwnd::open_file(const Glib::ustring& fn, bool playlist_mode)
     //Check what the max tick is
     m_mainperf->update_max_tick();
 
+    return true;
 }
 
 
@@ -639,36 +616,45 @@ void mainwnd::open_file(const Glib::ustring& fn, bool playlist_mode)
 void mainwnd::file_open()
 {
     if (is_save())
-        choose_file();
+        choose_file(false);
 }
 
 
 /*callback function*/
-void mainwnd::file_open_playlist()
+void mainwnd::file_open_setlist()
 {
     if (is_save()){
-        choose_file();
-        open_playlist_player();
+    	//todo: stop playing - when?
+        choose_file(true);
+        //open_setlist_player();
+
+
+
     }
 }
 
 
 
 
-void mainwnd::choose_file()
+void mainwnd::choose_file(const bool setlist_mode)
 {
     Gtk::FileChooserDialog dialog("Open MIDI file",
                       Gtk::FILE_CHOOSER_ACTION_OPEN);
     dialog.set_transient_for(*this);
 
+    if(setlist_mode)
+    	dialog.set_title("Open Playlist file");
+
     dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
     dialog.add_button(Gtk::Stock::OPEN, Gtk::RESPONSE_OK);
 
-    Gtk::FileFilter filter_midi;
-    filter_midi.set_name("MIDI files");
-    filter_midi.add_pattern("*.midi");
-    filter_midi.add_pattern("*.mid");
-    dialog.add_filter(filter_midi);
+    if(!setlist_mode){
+		Gtk::FileFilter filter_midi;
+		filter_midi.set_name("MIDI files");
+		filter_midi.add_pattern("*.midi");
+		filter_midi.add_pattern("*.mid");
+		dialog.add_filter(filter_midi);
+    }
 
     Gtk::FileFilter filter_any;
     filter_any.set_name("Any files");
@@ -681,8 +667,22 @@ void mainwnd::choose_file()
 
     switch(result) {
         case(Gtk::RESPONSE_OK):
-            open_file(dialog.get_filename(), false);
+        	if(setlist_mode){
 
+        		char fn[250];
+
+        		strcpy(fn,dialog.get_filename().c_str());
+
+        		printf("Opening setlist %s\n",fn);
+
+            	m_mainperf->set_setlist_mode(true);
+            	m_mainperf->set_setlist_file(fn);
+                update_window_title();
+        	}
+        	else{
+        		open_file(dialog.get_filename(), false);
+        	}
+        	break;
         default:
             break;
     }
@@ -1105,6 +1105,21 @@ mainwnd::on_key_press_event(GdkEventKey* a_ev)
         {
             sequence_key(m_mainperf->lookup_keyevent_seq( a_ev->keyval));
         }
+
+        if(m_mainperf->get_setlist_mode()){
+        	printf("Setlist mode is true, m_key_leftarrow = %d, as an int = %d\n",m_mainperf->m_key_leftarrow,(int) m_mainperf->m_key_leftarrow);
+            if ( a_ev->keyval == m_mainperf->m_key_leftarrow ){
+            	//printf("left arrow pressed\n");
+            	setlist_jump(-1);
+            }
+            if ( a_ev->keyval == m_mainperf->m_key_rightarrow ){
+            	//printf("right arrow pressed\n");
+            	setlist_jump(1);
+            }
+        }
+        else{
+        	printf("Setlist mode is false\n");
+        }
     }
     return false;
 }
@@ -1126,14 +1141,28 @@ mainwnd::update_window_title()
 {
     std::string title;
 
-    if (global_filename == "")
-        title = ( PACKAGE ) + string( " - [unnamed]" );
-    else
-        title =
-            ( PACKAGE )
-            + string( " - [" )
+    if(m_mainperf->get_setlist_mode()){
+    	char num[20];
+    	sprintf(num,"%02d",m_mainperf->get_setlist_index() +1);
+    	title =
+    		( PACKAGE )
+			+ string(" - Set, song ")
+			+ num
+			+ string(" - [")
             + Glib::filename_to_utf8(global_filename)
             + string( "]" );
+    }
+    else{
+
+		if (global_filename == "")
+			title = ( PACKAGE ) + string( " - [unnamed]" );
+		else
+			title =
+				( PACKAGE )
+				+ string( " - [" )
+				+ Glib::filename_to_utf8(global_filename)
+				+ string( "]" );
+    }
 
     set_title ( title.c_str());
 }

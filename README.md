@@ -71,7 +71,7 @@ First job is to print the pattern length to console when perfroll is opened
 
 Iterate through each active sequence and calculate the time it ends. Do this at every update. This shouldn't be hard to do, because the updates are already drawn onto the perfroll, and this info can only be changed if a perfroll window is open. 
 
-1. Find out how the song data is laid out. This should be done when perfroll is constructed.
+- Find out how the song data is laid out. This should be done when perfroll is constructed.
 - use printfs to show where the bits of the song are being laid out.     
 - figure out how the bars of each song relate to midi time - thus we should know when to stop
 - implement a stop at this point
@@ -100,10 +100,26 @@ Subtasks
 
 - enhance usability on high resolution screens
 
+---
+
 ### Setlist
 
-- be able to load a setlist and load each song with ctrl+arrow key in read-only mode.
+goal: be able to load a setlist and load each song with ctrl+arrow key in read-only mode.
 
+####Desired behaviour
+
+- [DONE] load a set list either with the -X command line option, or by doing file->open playlist in the menu. 
+- [DONE] load the first song on the list (check for errors)
+- [DONE] When a song finishes, load the next one on the setlist. Start playing it with `spacebar` as usual
+- [DONE]If the song is stopped with the `esc` key, don't increment the song (because you may want to start again)
+- [DONE for mainwnd - need to do it in perform] Have the left and right arrow keys move you up/down through the list. 
+- [DONE] Show setlist status in the titlebar (until we can figure out a more sophisticated way of showing the current song status)
+- [DONE] Setlist mode can be unset by loading an ordianry midi file. 
+
+
+
+
+---
 ### Mode switching
 
 - be able to switch between live and song mode more easily than via options.
