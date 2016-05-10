@@ -45,8 +45,6 @@ the seq24 program is called seq24plus in this project. This is done by renaming 
 
     autoreconf --install
     
-
-
 ###Compiling for debug
 
 The way to do this is to pass the debug flags to the configure command like this:

@@ -1,4 +1,4 @@
-m4trace:configure.in:2: -1- AC_INIT([seq24], [0.9.2], [seq24-devel@lists.sourceforge.net])
+m4trace:configure.in:2: -1- AC_INIT([seq24plus], [0.9.3], [sjh436@gmail.com])
 m4trace:configure.in:2: -1- m4_pattern_forbid([^_?A[CHUM]_])
 m4trace:configure.in:2: -1- m4_pattern_forbid([_AC_])
 m4trace:configure.in:2: -1- m4_pattern_forbid([^LIBOBJS$], [do not use LIBOBJS directly, use AC_LIBOBJ (see section `AC_LIBOBJ vs LIBOBJS'])

@@ -62,10 +62,10 @@ am__make_running_with_option = \
   test $$has_opt = yes
 am__make_dryrun = (target_option=n; $(am__make_running_with_option))
 am__make_keepgoing = (target_option=k; $(am__make_running_with_option))
-pkgdatadir = $(datadir)/seq24
-pkgincludedir = $(includedir)/seq24
-pkglibdir = $(libdir)/seq24
-pkglibexecdir = $(libexecdir)/seq24
+pkgdatadir = $(datadir)/seq24plus
+pkgincludedir = $(includedir)/seq24plus
+pkglibdir = $(libdir)/seq24plus
+pkglibexecdir = $(libexecdir)/seq24plus
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 install_sh_DATA = $(install_sh) -c -m 644
 install_sh_PROGRAM = $(install_sh) -c
@@ -232,10 +232,10 @@ CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
 CPP = gcc -E
-CPPFLAGS = 
+CPPFLAGS = -DDEBUG
 CXX = g++
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -g -O2
+CXXFLAGS = -g -O0
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
@@ -264,13 +264,13 @@ LTLIBOBJS =
 MAKEINFO = makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
-PACKAGE = seq24
-PACKAGE_BUGREPORT = seq24-devel@lists.sourceforge.net
-PACKAGE_NAME = seq24
-PACKAGE_STRING = seq24 0.9.2
-PACKAGE_TARNAME = seq24
+PACKAGE = seq24plus
+PACKAGE_BUGREPORT = sjh436@gmail.com
+PACKAGE_NAME = seq24plus
+PACKAGE_STRING = seq24plus 0.9.3
+PACKAGE_TARNAME = seq24plus
 PACKAGE_URL = 
-PACKAGE_VERSION = 0.9.2
+PACKAGE_VERSION = 0.9.3
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
@@ -278,7 +278,7 @@ PKG_CONFIG_PATH =
 SET_MAKE = 
 SHELL = /bin/bash
 STRIP = 
-VERSION = 0.9.2
+VERSION = 0.9.3
 abs_builddir = /home/sjh/git/seq24plus/src
 abs_srcdir = /home/sjh/git/seq24plus/src
 abs_top_builddir = /home/sjh/git/seq24plus
