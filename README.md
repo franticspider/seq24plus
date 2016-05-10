@@ -39,6 +39,14 @@ What to do with a fresh repository checkout?
 
 If you add new .cpp or .h files, you'll need to modify Makefile.am, and then run ./configure to generate Makefile.in and Makefile
 
+###Autotools notes
+
+the seq24 program is called seq24plus in this project. This is done by renaming the `seq24` to `seq24plus` in Makefile.am. Then to compile, do
+
+    autoreconf --install
+    
+
+
 ###Compiling for debug
 
 The way to do this is to pass the debug flags to the configure command like this:

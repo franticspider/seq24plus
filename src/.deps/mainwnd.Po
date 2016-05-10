@@ -28,6 +28,7 @@ mainwnd.o: mainwnd.cpp /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/asm/errno.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
  /usr/include/c++/4.8/cstring /usr/include/string.h \
+ /usr/include/x86_64-linux-gnu/bits/string3.h \
  /usr/include/gtk-2.0/gtk/gtkversion.h mainwnd.h mainwid.h globals.h \
  config.h /usr/include/c++/4.8/string \
  /usr/include/c++/4.8/bits/stringfwd.h \
@@ -49,6 +50,7 @@ mainwnd.o: mainwnd.cpp /usr/include/stdc-predef.h \
  /usr/include/wchar.h /usr/include/stdio.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
+ /usr/include/x86_64-linux-gnu/bits/wchar2.h \
  /usr/include/c++/4.8/bits/allocator.h \
  /usr/include/x86_64-linux-gnu/c++/4.8/bits/c++allocator.h \
  /usr/include/c++/4.8/ext/new_allocator.h /usr/include/c++/4.8/new \
@@ -153,6 +155,7 @@ mainwnd.o: mainwnd.cpp /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/sys/types.h \
  /usr/include/x86_64-linux-gnu/sys/select.h \
  /usr/include/x86_64-linux-gnu/bits/select.h \
+ /usr/include/x86_64-linux-gnu/bits/select2.h \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
  /usr/include/glibmm-2.4/glibmm/error.h \
  /usr/include/glibmm-2.4/glibmm/exception.h \
@@ -265,7 +268,9 @@ mainwnd.o: mainwnd.cpp /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_algo.h /usr/include/c++/4.8/cstdlib \
  /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h /usr/include/alloca.h \
+ /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
+ /usr/include/x86_64-linux-gnu/bits/stdlib.h \
  /usr/include/c++/4.8/bits/algorithmfwd.h \
  /usr/include/c++/4.8/bits/stl_heap.h /usr/include/c++/4.8/deque \
  /usr/include/c++/4.8/bits/stl_deque.h \
@@ -348,6 +353,7 @@ mainwnd.o: mainwnd.cpp /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
  /usr/include/x86_64-linux-gnu/bits/environments.h \
  /usr/include/x86_64-linux-gnu/bits/confname.h /usr/include/getopt.h \
+ /usr/include/x86_64-linux-gnu/bits/unistd.h \
  /usr/include/glib-2.0/gio/gdatainputstream.h \
  /usr/include/glib-2.0/gio/gdataoutputstream.h \
  /usr/include/glib-2.0/gio/gdbusaddress.h \
@@ -487,6 +493,8 @@ mainwnd.o: mainwnd.cpp /usr/include/stdc-predef.h \
  /usr/include/pango-1.0/pango/pango-utils.h /usr/include/libio.h \
  /usr/include/_G_config.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio2.h \
  /usr/lib/x86_64-linux-gnu/gtk-2.0/include/gdkconfig.h \
  /usr/include/gtk-2.0/gdk/gdkdisplay.h \
  /usr/include/gtk-2.0/gdk/gdkevents.h /usr/include/gtk-2.0/gdk/gdkcolor.h \
@@ -555,6 +563,7 @@ mainwnd.o: mainwnd.cpp /usr/include/stdc-predef.h \
  /usr/include/freetype2/config/ftconfig.h \
  /usr/include/freetype2/config/ftoption.h \
  /usr/include/freetype2/config/ftstdlib.h /usr/include/setjmp.h \
+ /usr/include/x86_64-linux-gnu/bits/setjmp2.h \
  /usr/include/freetype2/fttypes.h /usr/include/freetype2/ftsystem.h \
  /usr/include/freetype2/ftimage.h /usr/include/freetype2/fterrors.h \
  /usr/include/freetype2/ftmoderr.h /usr/include/freetype2/fterrdef.h \
@@ -575,6 +584,7 @@ mainwnd.o: mainwnd.cpp /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/nan.h \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
+ /usr/include/x86_64-linux-gnu/bits/mathinline.h \
  /usr/include/c++/4.8/bits/valarray_array.h \
  /usr/include/c++/4.8/bits/valarray_array.tcc \
  /usr/include/c++/4.8/bits/valarray_before.h \
@@ -854,9 +864,11 @@ mainwnd.o: mainwnd.cpp /usr/include/stdc-predef.h \
  /usr/include/alsa/asoundlib.h /usr/include/fcntl.h \
  /usr/include/x86_64-linux-gnu/bits/fcntl.h \
  /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
- /usr/include/x86_64-linux-gnu/bits/uio.h /usr/include/assert.h \
+ /usr/include/x86_64-linux-gnu/bits/uio.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl2.h /usr/include/assert.h \
  /usr/include/x86_64-linux-gnu/sys/poll.h \
- /usr/include/x86_64-linux-gnu/bits/poll.h /usr/include/alsa/asoundef.h \
+ /usr/include/x86_64-linux-gnu/bits/poll.h \
+ /usr/include/x86_64-linux-gnu/bits/poll2.h /usr/include/alsa/asoundef.h \
  /usr/include/alsa/version.h /usr/include/alsa/global.h \
  /usr/include/alsa/input.h /usr/include/alsa/output.h \
  /usr/include/alsa/error.h /usr/include/alsa/conf.h \
@@ -1250,6 +1262,8 @@ mainwnd.o: mainwnd.cpp /usr/include/stdc-predef.h \
 
 /usr/include/string.h:
 
+/usr/include/x86_64-linux-gnu/bits/string3.h:
+
 /usr/include/gtk-2.0/gtk/gtkversion.h:
 
 mainwnd.h:
@@ -1305,6 +1319,8 @@ config.h:
 /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdarg.h:
 
 /usr/include/x86_64-linux-gnu/bits/wchar.h:
+
+/usr/include/x86_64-linux-gnu/bits/wchar2.h:
 
 /usr/include/c++/4.8/bits/allocator.h:
 
@@ -1553,6 +1569,8 @@ config.h:
 /usr/include/x86_64-linux-gnu/sys/select.h:
 
 /usr/include/x86_64-linux-gnu/bits/select.h:
+
+/usr/include/x86_64-linux-gnu/bits/select2.h:
 
 /usr/include/x86_64-linux-gnu/sys/sysmacros.h:
 
@@ -1812,7 +1830,11 @@ config.h:
 
 /usr/include/alloca.h:
 
+/usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h:
+
 /usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdlib.h:
 
 /usr/include/c++/4.8/bits/algorithmfwd.h:
 
@@ -1993,6 +2015,8 @@ config.h:
 /usr/include/x86_64-linux-gnu/bits/confname.h:
 
 /usr/include/getopt.h:
+
+/usr/include/x86_64-linux-gnu/bits/unistd.h:
 
 /usr/include/glib-2.0/gio/gdatainputstream.h:
 
@@ -2290,6 +2314,10 @@ config.h:
 
 /usr/include/x86_64-linux-gnu/bits/sys_errlist.h:
 
+/usr/include/x86_64-linux-gnu/bits/stdio.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:
+
 /usr/lib/x86_64-linux-gnu/gtk-2.0/include/gdkconfig.h:
 
 /usr/include/gtk-2.0/gdk/gdkdisplay.h:
@@ -2442,6 +2470,8 @@ config.h:
 
 /usr/include/setjmp.h:
 
+/usr/include/x86_64-linux-gnu/bits/setjmp2.h:
+
 /usr/include/freetype2/fttypes.h:
 
 /usr/include/freetype2/ftsystem.h:
@@ -2495,6 +2525,8 @@ config.h:
 /usr/include/x86_64-linux-gnu/bits/mathdef.h:
 
 /usr/include/x86_64-linux-gnu/bits/mathcalls.h:
+
+/usr/include/x86_64-linux-gnu/bits/mathinline.h:
 
 /usr/include/c++/4.8/bits/valarray_array.h:
 
@@ -3108,11 +3140,15 @@ midibus.h:
 
 /usr/include/x86_64-linux-gnu/bits/uio.h:
 
+/usr/include/x86_64-linux-gnu/bits/fcntl2.h:
+
 /usr/include/assert.h:
 
 /usr/include/x86_64-linux-gnu/sys/poll.h:
 
 /usr/include/x86_64-linux-gnu/bits/poll.h:
+
+/usr/include/x86_64-linux-gnu/bits/poll2.h:
 
 /usr/include/alsa/asoundef.h:
 

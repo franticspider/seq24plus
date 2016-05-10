@@ -29,6 +29,7 @@
 
 #seq24 itself:
 src/seq24
+src/seq24plus
 
 #gedit backup files
 *~

@@ -3,11 +3,11 @@
 SUBDIRS = pixmaps
 
 AM_CXXFLAGS = $(GTKMM_CFLAGS) $(JACK_CFLAGS) $(LASH_CFLAGS) -Wall
-seq24_LDADD = $(GTKMM_LIBS) $(ALSA_LIBS) $(JACK_LIBS) $(LASH_LIBS)
+seq24plus_LDADD = $(GTKMM_LIBS) $(ALSA_LIBS) $(JACK_LIBS) $(LASH_LIBS)
 
-bin_PROGRAMS = seq24
+bin_PROGRAMS = seq24plus
 
-seq24_SOURCES = \
+seq24plus_SOURCES = \
 	configfile.cpp configfile.h \
 	controllers.h \
 	event.cpp event.h \
