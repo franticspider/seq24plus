@@ -1,0 +1,46 @@
+#EVOTOP:
+
+
+MAINWND: song mode is: 1
+MAINWND: setting position:
+perform::position_jack() bool is 0
+MAINWND: start:
+MAINWND: start jack:
+Setlist mode is true, m_key_leftarrow = 65361, as an int = 65361
+
+
+PERFORM.inner_start: a_state is 1, global start mode is 1
+key_press[32] == space
+PERFEDIT: song mode is: 1
+PERFEDIT: setting position:
+perform::position_jack() bool is 1
+PERFEDIT: sart_jack:
+PERFEDIT: start:
+PERFORM.inner_start: a_state is 1, global start mode is 1
+key_press[65307] == Escape
+
+
+
+=======changed to live mode============
+
+
+
+
+MAINWND: song mode is: 0
+MAINWND: setting position:
+perform::position_jack() bool is 0
+MAINWND: start:
+MAINWND: start jack:
+Setlist mode is true, m_key_leftarrow = 65361, as an int = 65361
+
+PERFORM.inner_start: a_state is 0, global start mode is 0
+key_press[65307]
+Setlist mode is true, m_key_leftarrow = 65361, as an int = 65361
+key_press[32] == space
+PERFEDIT: song mode is: 0
+PERFEDIT: setting position:
+perform::position_jack() bool is 1
+PERFEDIT: sart_jack:
+PERFEDIT: start:
+PERFORM.inner_start: a_state is 0, global start mode is 0
+key_press[65307] == Escape

@@ -997,7 +997,7 @@ void perform::stop_jack(  )
 void perform::position_jack( bool a_state )
 {
 
-    //printf( "perform::position_jack()\n" );
+    printf( "perform::position_jack() bool is %d\n",a_state );
 
 #ifdef JACK_SUPPORT
 
@@ -1015,6 +1015,8 @@ void perform::position_jack( bool a_state )
     if ( a_state ){
         current_tick = m_left_tick;
     }
+
+    printf("Current tick is %l\n", current_tick);
 
     jack_position_t pos;
 
@@ -1095,6 +1097,9 @@ void perform::inner_start(bool a_state)
     m_condition_var.lock();
 
     if (!is_running()) {
+
+
+    	printf("PERFORM.inner_start: a_state is %d, global start mode is %d\n",a_state,global_jack_start_mode);
 
         set_playback_mode( a_state );
 

@@ -80,7 +80,7 @@ interaction_method_e global_interactionmethod = e_seq24_interaction;
 bool global_with_jack_transport = false;
 bool global_with_jack_master = false;
 bool global_with_jack_master_cond = false;
-bool global_jack_start_mode = true;
+bool global_jack_start_mode = true;	/* Live mode (false) or song mode (true)*/ //TODO: find out which is `true'
 Glib::ustring global_jack_session_uuid = "";
 
 user_midi_bus_definition   global_user_midi_bus_definitions[c_maxBuses];

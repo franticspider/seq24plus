@@ -96,10 +96,10 @@ mainwnd::mainwnd(perform *a_p):
                 mem_fun(*this, &mainwnd::file_save)));
     m_menu_file->items().push_back(MenuElem("Save _as...",
                 mem_fun(*this, &mainwnd::file_save_as)));
-/** SJH: Adding the load playlist option here */
-    //TODO: Create an open_setlist function in mainwnd
+
     m_menu_file->items().push_back(MenuElem("Open _setlist...",
                 mem_fun(*this, &mainwnd::file_open_setlist)));
+
     m_menu_file->items().push_back(SeparatorElem());
     m_menu_file->items().push_back(MenuElem("_Import...",
                 mem_fun(*this, &mainwnd::file_import_dialog)));
@@ -416,9 +416,45 @@ mainwnd::options_dialog( void )
 void
 mainwnd::start_playing( void )
 {
-    m_mainperf->position_jack( false );
-    m_mainperf->start( false );
+	/*
+	 *
+	 * perfedit::start_playing has this:
+
+    m_mainperf->position_jack( true ); sets current_tick to m_left_tick
     m_mainperf->start_jack( );
+    m_mainperf->start( true );
+
+     * In fact, a lot of this stuff is messed up. We should be
+     * referencing the variable called global_jack_start_mode
+     * which states whether we are in live mode or song mode
+
+     * TODO: check the two .seq24rc files between the two machines
+     * and check the generated config.h files - these are the only things
+     * within the project that could be different
+
+     * but I still don't understand how it works on this machine
+     * but not on others...
+     *
+     *
+	 m_mainperf->start:
+			m_stop_requested = false;
+			if (m_jack_running) {
+				return;
+			}
+			inner_start(a_state);
+
+
+
+
+	 */
+	printf("MAINWND: song mode is: %d\n",global_jack_start_mode);
+	printf("MAINWND: setting position:\n");
+    m_mainperf->position_jack( false );
+	printf("MAINWND: start:\n");
+    m_mainperf->start( false );
+	printf("MAINWND: start jack:\n");
+    m_mainperf->start_jack( );
+
     is_pattern_playing = true;
 }
 
@@ -1089,10 +1125,15 @@ mainwnd::on_key_press_event(GdkEventKey* a_ev)
         /* dont_toggle is true IF start/end keys are different*/
         bool dont_toggle = m_mainperf->m_key_start != m_mainperf->m_key_stop;
 
+        printf("=====================\nMAINWND:\ndon't toggle is %d\nm_key_start is %d\nm_key_stop is %d\n",dont_toggle,m_mainperf->m_key_start,m_mainperf->m_key_stop);
+        printf("keyvl = %d\nis_pattern_plying is %d\n",a_ev->keyval,is_pattern_playing);
+
         if ( a_ev->keyval == m_mainperf->m_key_start
                 && (dont_toggle || !is_pattern_playing))
         {
+        	printf("calling start_playing\n");
             start_playing();
+        	printf("=====================\n");
         }
         else if ( a_ev->keyval == m_mainperf->m_key_stop
                 && (dont_toggle || is_pattern_playing))

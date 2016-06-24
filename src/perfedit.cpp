@@ -322,8 +322,14 @@ perfedit::undo( void )
 void
 perfedit::start_playing( void )
 {
+
+
+	printf("PERFEDIT: song mode is: %d\n",global_jack_start_mode);
+	printf("PERFEDIT: setting position:\n");
     m_mainperf->position_jack( true );
+	printf("PERFEDIT: sart_jack:\n");
     m_mainperf->start_jack( );
+	printf("PERFEDIT: start:\n");
     m_mainperf->start( true );
 }
 

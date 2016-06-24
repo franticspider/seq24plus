@@ -51,6 +51,11 @@ The way to do this is to pass the debug flags to the configure command like this
 
     ./configure CPPFLAGS=-DDEBUG CXXFLAGS="-g -O0"
 
+NB, you'll need to add the libraries autoconf and  libgtkmm-2.4 to get this to work: 
+
+    sudo apt-get install autoconf
+    sudo apt-get install libgtkmm-2.4-dev
+
 ###Checking with Valgrind
 
 
