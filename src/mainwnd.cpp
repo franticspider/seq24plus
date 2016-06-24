@@ -443,17 +443,37 @@ mainwnd::start_playing( void )
 			}
 			inner_start(a_state);
 
+	printf("PERFEDIT: song mode is: %d\n",global_jack_start_mode);
+	printf("PERFEDIT: setting position:\n");
+    m_mainperf->position_jack( true );
+	printf("PERFEDIT: sart_jack:\n");
+    m_mainperf->start_jack( );
+	printf("PERFEDIT: start:\n");
+    m_mainperf->start( true );
 
 
 
 	 */
-	printf("MAINWND: song mode is: %d\n",global_jack_start_mode);
-	printf("MAINWND: setting position:\n");
-    m_mainperf->position_jack( false );
-	printf("MAINWND: start:\n");
-    m_mainperf->start( false );
-	printf("MAINWND: start jack:\n");
-    m_mainperf->start_jack( );
+
+	//TODO: Check the song mode and the setlist mode - and do something else
+	if(m_mainperf->get_setlist_mode()){
+		printf("MAINWND_SETLIST: song mode is: %d\n",global_jack_start_mode);
+		printf("MAINWND_SETLIST: setting position:\n");
+		m_mainperf->position_jack( true );
+		printf("MAINWND_SETLIST: sart_jack:\n");
+		m_mainperf->start_jack( );
+		printf("MAINWND_SETLIST: start:\n");
+		m_mainperf->start( true );
+	}
+	else{
+		printf("MAINWND: song mode is: %d\n",global_jack_start_mode);
+		printf("MAINWND: setting position:\n");
+		m_mainperf->position_jack( false );
+		printf("MAINWND: start:\n");
+		m_mainperf->start( false );
+		printf("MAINWND: start jack:\n");
+		m_mainperf->start_jack( );
+	}
 
     is_pattern_playing = true;
 }
