@@ -306,8 +306,13 @@ void mainwnd::setlist_jump(int jmp){
 				}
 				else{
 					printf("File not found: %s\n", m_mainperf->get_setlist_current_file());
-					m_mainperf->set_setlist_next();
+						
 				}
+			}
+			else{//Nonexistent files warning needed
+				printf("Nonexistant setlist file %s on line %d\n",
+					m_mainperf->get_setlist_current_file(),
+					m_mainperf->get_setlist_index()+1);
 			}
 		}
 		else{
@@ -645,10 +650,16 @@ bool mainwnd::open_file(const Glib::ustring& fn, bool setlist_mode)
     m_modified = !result;
 
     if (!result) {
-        Gtk::MessageDialog errdialog(*this,
-                "Error reading file: " + fn, false,
-                Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
-        errdialog.run();
+    	if(setlist_mode){
+    		//We don't want dialog boxes in setlist mode!
+    		printf("Error reading file: %s\n",fn.data());
+    	}
+    	else{
+		    Gtk::MessageDialog errdialog(*this,
+		            "Error reading file: " + fn, false,
+		            Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
+		    errdialog.run();
+        }
         return false;
     }
 
